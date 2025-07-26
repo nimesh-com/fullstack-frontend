@@ -1,9 +1,10 @@
 import { Link, Route, Routes } from "react-router-dom";
 import { IoReorderThreeSharp } from "react-icons/io5";
+import ProductAdminPage from "./Admin/productAdminPage";
 
 export default function AdminPage() {
   return (
-    <div className=" w-full h-screen  justify-center">
+    <div className=" w-full h-screen  flex">
       <div className="w-[300px] h-full flex flex-col items-center">
         <span className=" font-bold text-2xl my-5">Admin Panal</span>
         <Link
@@ -21,12 +22,12 @@ export default function AdminPage() {
           Orders
         </Link>
       </div>
-      <div className="w-[calc(100%-100px)] h-full">
-        <Routes>
-          <Route path="/" element={<h1>Home</h1>} />
-          <Route path="/products" element={<h1>Products</h1>} />
-          <Route path="/orders" element={<h1>Orders</h1>} />
-        </Routes>
+      <div className="w-[calc(100%-300px)] h-full">
+        <Routes path="/*">
+        <Route path="/" element={<h1>Dashboard</h1>} />
+        <Route path="/products" element={<ProductAdminPage/>} />
+        <Route path="/orders" element={<h1>Orders</h1>} />
+         </Routes>
       </div>
     </div>
   );
