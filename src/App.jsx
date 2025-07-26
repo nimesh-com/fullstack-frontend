@@ -5,10 +5,12 @@ import Home from "./Pages/home";
 import Login from "./Pages/login";
 import Test from "./Pages/test";
 import AdminPage from "./Pages/adminPage";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
     <BrowserRouter>
+    <Toaster position="top-right"/>
       <div className="h-screen w-full flex justify-center items-center ">
         <Routes path="/">
           <Route path="/" element={<Home/>} />
