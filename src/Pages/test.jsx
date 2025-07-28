@@ -1,35 +1,10 @@
-import { useState } from "react";
 
+/* https://sshhtkcwaautcrognpyx.supabase.co */
+/* eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNzaGh0a2N3YWF1dGNyb2ducHl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM3MDI3NDEsImV4cCI6MjA2OTI3ODc0MX0.O_a3pITg00SAflX3BWOo66jaU81TslyTl9peXZr4APc */
 export default function Test() {
-  const [count, setCount] = useState(0);
-  function increment() {
-    setCount(count + 1);
-  }
-
-  function decrement() {
-    setCount(count - 1);
-  }
-
   return (
-    <div className="text-3xl w-full h-screen flex justify-center items-center bg-amber-300">
-      <div className="w-[400px] h-[400px] flex flex-col justify-center items-center bg-white">
-        <h1 className="text-4xl font-bold ">{count}</h1>
+  <div>
 
-        <div className="w-full h-[100px] flex justify-center items-center">
-          <button
-            onClick={increment}
-            className="text-4xl bg-blue-500 h-[45px] w-[45px] rounded-2xl flex justify-center items-center mx-2"
-          >
-            +
-          </button>
-          <button
-            onClick={decrement}
-            className="text-4xl bg-blue-500 h-[45px] w-[45px] rounded-2xl flex justify-center items-center"
-          >
-            -
-          </button>
-        </div>
-      </div>
-    </div>
+  </div>
   );
 }
