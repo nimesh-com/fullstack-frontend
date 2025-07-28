@@ -9,18 +9,19 @@ export default function Login() {
 
   function Login() {
     axios
-      .post(import.meta.env.VITE_BACKEND_URL+"/users/login", {
+      .post(import.meta.env.VITE_BACKEND_URL + "/users/login", {
         email: email,
         password: Password,
       })
       .then((response) => {
         console.log(response.data);
         toast.success("Login Success");
-        if(response.data.role === "admin"){
-          navigate("/admin")
+        localStorage.setItem("token", response.data.token);
+        if (response.data.role === "admin") {
+          navigate("/admin");
         }
-        if(response.data.role === "user"){
-          navigate("/")
+        if (response.data.role === "user") {
+          navigate("/");
         }
       })
       .catch((error) => {

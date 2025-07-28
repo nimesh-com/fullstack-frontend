@@ -1,6 +1,7 @@
 import { Link, Route, Routes } from "react-router-dom";
 import { IoReorderThreeSharp } from "react-icons/io5";
 import ProductAdminPage from "./Admin/productAdminPage";
+import AddProduct from "./Admin/addProductPage";
 
 export default function AdminPage() {
   return (
@@ -27,6 +28,7 @@ export default function AdminPage() {
         <Route path="/" element={<h1>Dashboard</h1>} />
         <Route path="/products" element={<ProductAdminPage/>} />
         <Route path="/orders" element={<h1>Orders</h1>} />
+        <Route path="/addProduct" element={<AddProduct/>} />
          </Routes>
       </div>
     </div>
