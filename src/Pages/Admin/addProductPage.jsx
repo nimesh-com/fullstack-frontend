@@ -11,29 +11,41 @@
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import uploadFile from "../../utils/mediaUpload";
 export default function AddProduct() {
   const [productId, setProductId] = useState("");
   const [name, setProductName] = useState("");
   const [price, setProductPrice] = useState("");
   const [category, setProductCategory] = useState("");
   const [description, setProductDescription] = useState("");
-  const [image, setProductImage] = useState("");
+  const [image, setProductImage] = useState([]);
   const [isAvailable, setIsAvailable] = useState(true);
 
-  function addProduct() {
+  async function addProduct() {
+    const promisArray = [];
+
+    for (let i = 0; i < image.length; i++) {
+      const promise = uploadFile(image[i]);
+      promisArray[i] = promise;
+    }
+    const response = await Promise.all(promisArray);
+    console.log(response);
+
+    return;
+
     const productData = {
       productId: productId,
       name: name,
       price: price,
       category: category,
       description: description,
-      image: image,
+      image: [],
       isAvailable: isAvailable,
     };
     const token = localStorage.getItem("token");
 
-    if(token === null) {
-   window.location.href = "/login";
+    if (token === null) {
+      window.location.href = "/login";
       return;
     }
 
@@ -134,10 +146,10 @@ export default function AddProduct() {
             Image URL
           </label>
           <input
-            type="text"
+            type="file"
             name="image"
-            value={image}
-            onChange={(e) => setProductImage(e.target.value)}
+            multiple
+            onChange={(e) => setProductImage(e.target.files)}
             placeholder="Enter Image URL"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
           />
@@ -149,7 +161,7 @@ export default function AddProduct() {
           </label>
           <select
             name="isAvailable"
-            onChange={(e) => setIsAvailable(e.target.value==="true")}
+            onChange={(e) => setIsAvailable(e.target.value === "true")}
             className="mt-1 block w-40 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
           >
             <option value={true}>Available</option>
