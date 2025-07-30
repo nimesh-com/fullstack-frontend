@@ -11,11 +11,6 @@
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
-<<<<<<< HEAD
-import { Link } from "react-router-dom";
-
-=======
->>>>>>> 87f72a34a43d18a72a5dda2b17bd948b7abfd89c
 export default function AddProduct() {
   const [productId, setProductId] = useState("");
   const [name, setProductName] = useState("");
@@ -37,13 +32,8 @@ export default function AddProduct() {
     };
     const token = localStorage.getItem("token");
 
-<<<<<<< HEAD
-    if (token === null) {
-      window.location.href = "/login";
-=======
     if(token === null) {
    window.location.href = "/login";
->>>>>>> 87f72a34a43d18a72a5dda2b17bd948b7abfd89c
       return;
     }
 
@@ -159,11 +149,7 @@ export default function AddProduct() {
           </label>
           <select
             name="isAvailable"
-<<<<<<< HEAD
-            onChange={(e) => setIsAvailable(e.target.value === "true")}
-=======
             onChange={(e) => setIsAvailable(e.target.value==="true")}
->>>>>>> 87f72a34a43d18a72a5dda2b17bd948b7abfd89c
             className="mt-1 block w-40 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
           >
             <option value={true}>Available</option>
@@ -172,21 +158,12 @@ export default function AddProduct() {
         </div>
 
         <div className="flex justify-end space-x-4">
-<<<<<<< HEAD
-          <Link
-            to={"/admin/products"}
-=======
           <button
->>>>>>> 87f72a34a43d18a72a5dda2b17bd948b7abfd89c
             type="button"
             className="px-6 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-200"
           >
             Cancel
-<<<<<<< HEAD
-          </Link>
-=======
           </button>
->>>>>>> 87f72a34a43d18a72a5dda2b17bd948b7abfd89c
           <button
             type="submit"
             onClick={addProduct}
