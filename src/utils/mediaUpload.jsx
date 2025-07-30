@@ -4,20 +4,33 @@ const key =
 import { createClient } from "@supabase/supabase-js";
 const supabase = createClient(url, key);
 export default function uploadFile(file) {
+<<<<<<< HEAD
   const promise = new Promise((resolve, reject) => {
+=======
+  const promis = new Promise((resolve, reject) => {
+>>>>>>> 87f72a34a43d18a72a5dda2b17bd948b7abfd89c
     if (file == null) {
       reject("No File Selected");
       return;
     }
+<<<<<<< HEAD
     const timeStamp = new Date().getTime();
     const fileName = timeStamp + "-" + file.name;
 
     supabase.storage
       .from("images")
+=======
+    const timStamp = new Date().getTime();
+    const fileName = timStamp + "-" + file.name;
+
+    supabase.storage
+      .from("image")
+>>>>>>> 87f72a34a43d18a72a5dda2b17bd948b7abfd89c
       .upload(fileName, file, {
         cacheControl: "3600",
         upsert: false,
       })
+<<<<<<< HEAD
 
       .then(() => {
         const publicUrl = supabase.storage.from("images").getPublicUrl(fileName)
@@ -30,4 +43,20 @@ export default function uploadFile(file) {
       });
   });
   return promise;
+=======
+      
+      .then(() => {
+        const publicUrl = supabase.storage.from("image").getPublicUrl(fileName)
+          .data.publicUrl;
+        console.log(publicUrl);
+        resolve(publicUrl);
+      })
+      .catch((error) => {
+        console.log("Error uploading file:", error);
+        reject("Failed to upload file");
+      });
+  });
+  return promis;
+
+>>>>>>> 87f72a34a43d18a72a5dda2b17bd948b7abfd89c
 }
