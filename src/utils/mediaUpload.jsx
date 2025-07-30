@@ -4,7 +4,7 @@ const key =
 import { createClient } from "@supabase/supabase-js";
 const supabase = createClient(url, key);
 export default function uploadFile(file) {
-  const promis = new Promise((resolve, reject) => {
+  const promise = new Promise((resolve, reject) => {
     if (file == null) {
       reject("No File Selected");
       return;
@@ -13,23 +13,20 @@ export default function uploadFile(file) {
     const fileName = timStamp + "-" + file.name;
 
     supabase.storage
-      .from("image")
+      .from("images")
       .upload(fileName, file, {
         cacheControl: "3600",
         upsert: false,
       })
-      
+
       .then(() => {
-        const publicUrl = supabase.storage.from("image").getPublicUrl(fileName)
+        const publicUrl = supabase.storage.from("images").getPublicUrl(fileName)
           .data.publicUrl;
-        console.log(publicUrl);
         resolve(publicUrl);
       })
       .catch((error) => {
-        console.log("Error uploading file:", error);
         reject("Failed to upload file");
       });
   });
-  return promis;
-
+  return promise;
 }

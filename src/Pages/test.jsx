@@ -13,16 +13,13 @@ export default function Test() {
   }
   return (
     <div className="w-full h-full flex justify-center items-center">
-      <input onChange={setFile} type="file" />
+      <input onChange={(e) => setFile(e.target.files[0])} type="file" />
       <button
         onClick={handleUpload}
         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
       >
-        Upload 
+        Upload
       </button>
     </div>
   );
-} 
-  
-
-  
+}
