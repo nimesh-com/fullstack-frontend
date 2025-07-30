@@ -10,13 +10,13 @@ import { Toaster } from "react-hot-toast";
 function App() {
   return (
     <BrowserRouter>
-    <Toaster position="top-right"/>
+      <Toaster position="top-right" />
       <div className="h-screen w-full flex justify-center items-center ">
         <Routes path="/">
-          <Route path="/" element={<Home/>} />
-          <Route path="/login" element={<Login/>}/>
-          <Route path = "/test" element={<Test/>}/>
-          <Route path="/admin/*" element={<AdminPage/>} />
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/test" element={<Test />} />
+          <Route path="/admin/*" element={<AdminPage />} />
         </Routes>
       </div>
     </BrowserRouter>

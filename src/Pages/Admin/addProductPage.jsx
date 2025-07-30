@@ -11,6 +11,8 @@
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
+
 export default function AddProduct() {
   const [productId, setProductId] = useState("");
   const [name, setProductName] = useState("");
@@ -32,8 +34,8 @@ export default function AddProduct() {
     };
     const token = localStorage.getItem("token");
 
-    if(token === null) {
-   window.location.href = "/login";
+    if (token === null) {
+      window.location.href = "/login";
       return;
     }
 
@@ -149,7 +151,7 @@ export default function AddProduct() {
           </label>
           <select
             name="isAvailable"
-            onChange={(e) => setIsAvailable(e.target.value==="true")}
+            onChange={(e) => setIsAvailable(e.target.value === "true")}
             className="mt-1 block w-40 rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
           >
             <option value={true}>Available</option>
@@ -158,12 +160,13 @@ export default function AddProduct() {
         </div>
 
         <div className="flex justify-end space-x-4">
-          <button
+          <Link
+            to={"/admin/products"}
             type="button"
             className="px-6 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-200"
           >
             Cancel
-          </button>
+          </Link>
           <button
             type="submit"
             onClick={addProduct}
