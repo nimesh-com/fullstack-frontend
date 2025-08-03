@@ -7,7 +7,7 @@ import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 export default function ProductAdminPage() {
-  const [a, setA] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
@@ -16,7 +16,7 @@ export default function ProductAdminPage() {
       .then((response) => {
         setProducts(response.data);
       });
-  }, [a]);
+  }, [isLoading]);
   return (
     <div className="w-full h-full border-[3px]">
       <table>
@@ -67,7 +67,7 @@ export default function ProductAdminPage() {
                         }
                       )
                       .then((response) => {
-                        setA(a + 1);
+                        setIsLoading(!isLoading);
                         toast.success("Product Deleted Successfully");
                         navigate("/admin/products");
                       })
