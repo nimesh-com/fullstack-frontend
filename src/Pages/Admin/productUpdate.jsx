@@ -12,16 +12,21 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import uploadFile from "../../utils/mediaUpload";
-export default function AddProduct() {
-  const [productId, setProductId] = useState("");
-  const [name, setProductName] = useState("");
-  const [price, setProductPrice] = useState("");
-  const [category, setProductCategory] = useState("");
-  const [description, setProductDescription] = useState("");
+import { useLocation, useNavigate } from "react-router-dom";
+export default function UpdateProduct() {
+  const location = useLocation();
+  const navigate=useNavigate();
+  const [productId, setProductId] = useState(location.state.productId);
+  const [name, setProductName] = useState(location.state.name);
+  const [price, setProductPrice] = useState(location.state.price);
+  const [category, setProductCategory] = useState(location.state.category);
+  const [description, setProductDescription] = useState(
+    location.state.description
+  );
   const [image, setProductImage] = useState([]);
-  const [isAvailable, setIsAvailable] = useState(true);
+  const [isAvailable, setIsAvailable] = useState(location.state.isAvailable);
 
-  async function addProduct() {
+  async function UpdateProduct() {
     const promisArray = [];
 
     for (let i = 0; i < image.length; i++) {
@@ -39,6 +44,11 @@ export default function AddProduct() {
       image: response,
       isAvailable: isAvailable,
     };
+
+    if (productData.image.length === 0) {
+      productData.image = location.state.image;
+    }
+
     const token = localStorage.getItem("token");
 
     if (token === null) {
@@ -47,12 +57,19 @@ export default function AddProduct() {
     }
 
     axios
-      .post(import.meta.env.VITE_BACKEND_URL + "/products", productData, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      .put(
+        import.meta.env.VITE_BACKEND_URL + "/products/" + productId,
+        productData,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      )
       .then((response) => {
         console.log(response.data);
-        toast.success("Product Added Successfully");
+        toast.success("Product Updated Successfully")
+        navigate('/admin/products');
       })
       .catch((error) => {
         console.log(error);
@@ -64,13 +81,14 @@ export default function AddProduct() {
     <div className="w-full h-full p-10 flex justify-center items-center bg-gray-100">
       <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-2xl border border-gray-300">
         <h2 className="text-2xl font-bold mb-6 text-gray-800 text-center">
-          Add New Product
+          Update Product
         </h2>
         <div>
           <label className="block text-sm font-medium text-gray-700">
             Product ID
           </label>
           <input
+            disabled
             type="number"
             name="productId"
             onChange={(e) => setProductId(e.target.value)}
@@ -173,10 +191,10 @@ export default function AddProduct() {
           </button>
           <button
             type="submit"
-            onClick={addProduct}
+            onClick={UpdateProduct}
             className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
           >
-            Submit Product
+            Update Product
           </button>
         </div>
       </div>

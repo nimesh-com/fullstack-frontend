@@ -1,4 +1,4 @@
-import { BiPlus, BiTrash } from "react-icons/bi";
+import { BiEdit, BiPlus, BiTrash } from "react-icons/bi";
 import { Link, Navigate } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -7,13 +7,12 @@ import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 export default function ProductAdminPage() {
-  const sampleProducts = [];
   const [a, setA] = useState(0);
-  const [products, setProducts] = useState(sampleProducts);
+  const [products, setProducts] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
     axios
-      .get(import.meta.env.VITE_BACKEND_URL + "/products")
+      .get(import.meta.env.VITE_BACKEND_URL + "/products",{headers: { Authorization: `Bearer ${localStorage.getItem("token")}`} })
       .then((response) => {
         setProducts(response.data);
       });
@@ -23,6 +22,7 @@ export default function ProductAdminPage() {
       <table>
         <thead>
           <tr>
+            <th className="p-[10px]">Image</th>
             <th className="p-[10px]">Product Id</th>
             <th className="p-[10px]">Name</th>
             <th className="p-[10px]">Price</th>
@@ -34,6 +34,13 @@ export default function ProductAdminPage() {
         <tbody>
           {products.map((product) => (
             <tr key={product.productId}>
+              <td className="p-[10px]">
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-[100px] h-[100px] object-cover"
+                />
+              </td>
               <td className="p-[10px]">{product.productId}</td>
               <td className="p-[10px]">{product.name}</td>
               <td className="p-[10px]">{product.price}</td>
@@ -69,6 +76,15 @@ export default function ProductAdminPage() {
                       });
                   }}
                 />
+              </td>
+              <td>
+                <BiEdit className="bg-green-500 text-4xl text-white p-[3px] rounded-full cursor-pointer" onClick={
+                    ()=>{
+                        navigate("/admin/updateProduct/",{
+                            state:product
+                        });
+                    }
+                }/>
               </td>
             </tr>
           ))}
