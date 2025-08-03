@@ -29,9 +29,6 @@ export default function AddProduct() {
       promisArray[i] = promise;
     }
     const response = await Promise.all(promisArray);
-    console.log(response);
-
-    return;
 
     const productData = {
       productId: productId,
@@ -39,7 +36,7 @@ export default function AddProduct() {
       price: price,
       category: category,
       description: description,
-      image: [],
+      image: response,
       isAvailable: isAvailable,
     };
     const token = localStorage.getItem("token");
