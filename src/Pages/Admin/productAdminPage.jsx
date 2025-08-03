@@ -11,11 +11,16 @@ export default function ProductAdminPage() {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
   useEffect(() => {
-    axios
-      .get(import.meta.env.VITE_BACKEND_URL + "/products",{headers: { Authorization: `Bearer ${localStorage.getItem("token")}`} })
-      .then((response) => {
-        setProducts(response.data);
-      });
+    if (isLoading) {
+      axios
+        .get(import.meta.env.VITE_BACKEND_URL + "/products", {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        })
+        .then((response) => {
+          setProducts(response.data);
+          setIsLoading(false);
+        });
+    }
   }, [isLoading]);
   return (
     <div className="w-full h-full border-[3px]">
@@ -78,13 +83,14 @@ export default function ProductAdminPage() {
                 />
               </td>
               <td>
-                <BiEdit className="bg-green-500 text-4xl text-white p-[3px] rounded-full cursor-pointer" onClick={
-                    ()=>{
-                        navigate("/admin/updateProduct/",{
-                            state:product
-                        });
-                    }
-                }/>
+                <BiEdit
+                  className="bg-green-500 text-4xl text-white p-[3px] rounded-full cursor-pointer"
+                  onClick={() => {
+                    navigate("/admin/updateProduct/", {
+                      state: product,
+                    });
+                  }}
+                />
               </td>
             </tr>
           ))}
