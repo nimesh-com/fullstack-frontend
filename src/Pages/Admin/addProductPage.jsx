@@ -20,6 +20,7 @@ export default function AddProduct() {
   const [description, setProductDescription] = useState("");
   const [image, setProductImage] = useState([]);
   const [isAvailable, setIsAvailable] = useState(true);
+  const[labeledPrice, setLabeledPrice] = useState("");
 
   async function addProduct() {
     const promisArray = [];
@@ -104,6 +105,20 @@ export default function AddProduct() {
             onChange={(e) => setProductPrice(e.target.value)}
             value={price}
             placeholder="Enter Price"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Labeled Price
+          </label>
+          <input
+            type="text"
+            name="labeledPrice"
+            onChange={(e) => setLabeledPrice(e.target.value)}
+            value={labeledPrice}
+            placeholder="Enter Labeled Price"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
           />
         </div>

@@ -1,18 +1,47 @@
+import { Link } from "react-router-dom";
 export default function ProductCard(props) {
-    return (
-        <div className="max-w-sm bg-white rounded-2xl shadow-md overflow-hidden p-4 hover:shadow-lg transition-shadow duration-300">
-            <img 
-                src={props.image} 
-                alt={props.name} 
-                className="w-full h-48 object-cover rounded-md"
-            />
-            <div className="mt-4">
-                <h2 className="text-xl font-semibold text-gray-800">{props.name}</h2>
-                <p className="text-gray-600 mt-1">Price: <span className="font-medium text-green-600">${props.price}</span></p>
-                <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200">
-                    View More
-                </button>
-            </div>
+  const product = props.product
+  return (
+    <Link to={"/overview/"+product.productId} className="w-[300px] h-[400px] flex-col shadow-2xl rounded-2xl shrink-0 overflow-hidden">
+      <img
+        src={product.image[0]}
+        className="w-full h-[275px] object-cover"
+        alt=""
+      />
+      <div className="w-full h-[125px] p-[10px]">
+        <h1>Product Id: {product.productId}</h1>
+        <h1 className="font-bold text-lg">{product.name}</h1>
+        <div>
+          {product.labledPrice > product.price ? (
+            <p>
+              {" "}
+              <span className="line-through text-red-500">
+                Rs.{" "}
+                {product.labledPrice.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </span>{" "}
+              <span>
+                Rs.{" "}
+                {product.price.toLocaleString("en-US", {
+                  minimumFractionDigits: 2,
+                  maximumFractionDigits: 2,
+                })}
+              </span>{" "}
+            </p>
+          ) : (
+            <span>
+              Rs.{" "}
+              {product.price.toLocaleString("en-US", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </span>
+          )}
         </div>
-    );
+        <h1 className="font-bold text-lg">{product.category}</h1>
+      </div>
+    </Link>
+  );
 }

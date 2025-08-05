@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";     
+import Loader from "../../Components/loader";
 
 export default function ProductAdminPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -23,14 +24,15 @@ export default function ProductAdminPage() {
     }
   }, [isLoading]);
   return (
-    <div className="w-full h-full border-[3px]">
-      <table>
+    <div className="w-full h-full ">
+      {isLoading ? (<Loader/>): (<table>
         <thead>
           <tr>
             <th className="p-[10px]">Image</th>
             <th className="p-[10px]">Product Id</th>
             <th className="p-[10px]">Name</th>
             <th className="p-[10px]">Price</th>
+            <th className="p-[10px]">Labeled Price</th>
             <th className="p-[10px]">Category</th>
             <th className="p-[10px]">Description</th>
             <th className="p-[10px]">Action</th>
@@ -49,8 +51,9 @@ export default function ProductAdminPage() {
               <td className="p-[10px]">{product.productId}</td>
               <td className="p-[10px]">{product.name}</td>
               <td className="p-[10px]">{product.price}</td>
+              <td className="p-[10px]">{product.labledPrice}</td>
               <td className="p-[10px]">{product.category}</td>
-              <td className="p-[10px]">{product.description}</td>
+              <td className="p-[10px] ">{product.description}</td>
               <td className="p-[10px]">
                 <BiTrash
                   className="bg-red-500 text-4xl text-white p-[3px] rounded-full cursor-pointer"
@@ -95,7 +98,7 @@ export default function ProductAdminPage() {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table>)}
       <Link
         to="/admin/addProduct"
         className=" cursor-pointer fixed right-[60px] bottom-[60px] text-white bg-black p-[20px] rounded-[10px]"

@@ -12,13 +12,14 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import uploadFile from "../../utils/mediaUpload";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 export default function UpdateProduct() {
   const location = useLocation();
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const [productId, setProductId] = useState(location.state.productId);
   const [name, setProductName] = useState(location.state.name);
   const [price, setProductPrice] = useState(location.state.price);
+  const[labledPrice, setLabeledPrice] = useState(location.state.labledPrice);
   const [category, setProductCategory] = useState(location.state.category);
   const [description, setProductDescription] = useState(
     location.state.description
@@ -39,6 +40,7 @@ export default function UpdateProduct() {
       productId: productId,
       name: name,
       price: price,
+      labledPrice: labledPrice,
       category: category,
       description: description,
       image: response,
@@ -68,8 +70,8 @@ export default function UpdateProduct() {
       )
       .then((response) => {
         console.log(response.data);
-        toast.success("Product Updated Successfully")
-        navigate('/admin/products');
+        toast.success("Product Updated Successfully");
+        navigate("/admin/products");
       })
       .catch((error) => {
         console.log(error);
@@ -89,7 +91,7 @@ export default function UpdateProduct() {
           </label>
           <input
             disabled
-            type="number"
+            type="text"
             name="productId"
             onChange={(e) => setProductId(e.target.value)}
             value={productId}
@@ -121,6 +123,20 @@ export default function UpdateProduct() {
             name="price"
             onChange={(e) => setProductPrice(e.target.value)}
             value={price}
+            placeholder="Enter Price"
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            Labeled Price
+          </label>
+          <input
+            type="number"
+            name="labeledPrice"
+            onChange={(e) => setProductPrice(e.target.value)}
+            value={labledPrice}
             placeholder="Enter Price"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
           />
@@ -183,12 +199,13 @@ export default function UpdateProduct() {
         </div>
 
         <div className="flex justify-end space-x-4">
-          <button
+          <Link
+            to={"/admin/products"}
             type="button"
             className="px-6 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-200"
           >
             Cancel
-          </button>
+          </Link>
           <button
             type="submit"
             onClick={UpdateProduct}

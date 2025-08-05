@@ -6,6 +6,7 @@ import Login from "./Pages/login";
 import Test from "./Pages/test";
 import AdminPage from "./Pages/adminPage";
 import { Toaster } from "react-hot-toast";
+import ClientPage from "./Pages/client/clientPage";
 
 function App() {
   return (
@@ -13,10 +14,10 @@ function App() {
       <Toaster position="top-right" />
       <div className="h-screen w-full flex justify-center items-center ">
         <Routes path="/">
-          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/test" element={<Test />} />
           <Route path="/admin/*" element={<AdminPage />} />
+          <Route path="/*" element={<ClientPage />} />
         </Routes>
       </div>
     </BrowserRouter>
