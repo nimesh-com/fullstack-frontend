@@ -43,7 +43,7 @@ export default function ProductAdminPage() {
             <tr key={product.productId}>
               <td className="p-[10px]">
                 <img
-                  src={product.image}
+                  src={product.image[0]}
                   alt={product.name}
                   className="w-[100px] h-[100px] object-cover"
                 />
