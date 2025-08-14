@@ -8,34 +8,100 @@ import ImageSlider from "../../Components/imageSlider";
 export default function Overview() {
   const params = useParams();
   const [product, setProduct] = useState(null);
-  const [status, setStatus] = useState("loading"); // loading, success, error
+  const [status, setStatus] = useState("loading");
 
   useEffect(() => {
     if (status === "loading") {
       axios
-        .get(import.meta.env.VITE_BACKEND_URL + "/products/" + params.productId)
+        .get(`${import.meta.env.VITE_BACKEND_URL}/products/${params.productId}`)
         .then((res) => {
           setProduct(res.data);
           setStatus("success");
         })
-        .catch((error) => {
+        .catch(() => {
           setStatus("error");
         });
     }
   }, [status]);
 
+  const handleAddToCart = () => {
+    toast.success(`${product.name} added to cart!`);
+  };
+
+  const handleBuyNow = () => {
+    toast.success(`Proceeding to checkout for ${product.name}`);
+  };
+
   return (
-    <div className="w-full h-full">
+    <div className="w-full min-h-screen bg-gray-50 p-6 flex justify-center items-center">
       {status === "loading" && <Loader />}
+
       {status === "success" && (
-        <div className="w-full h-full flex flex-row">
-          <div className="w-[49%] h-full flex flex-col justify-center items-center">
+        <div className="w-full max-w-6xl bg-white rounded-2xl shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
+          {/* Product Image Slider */}
+          <div className="flex justify-center items-center bg-gray-100 p-6">
             <ImageSlider image={product.image} />
           </div>
-          <div className="w-[49%] h-full bg-red-500"></div>
+
+          {/* Product Details */}
+          <div className="p-8 flex flex-col justify-between">
+            <div>
+              <h1 className="font-extrabold text-3xl text-gray-800 mb-4">{product.name}</h1>
+
+              {/* Price */}
+              {product.labledPrice > product.price ? (
+                <div className="flex items-center gap-4 mb-6">
+                  <span className="text-2xl font-bold text-red-500 line-through">
+                    Rs.{" "}
+                    {product.labledPrice.toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
+                  <span className="text-3xl font-bold text-green-600">
+                    Rs.{" "}
+                    {product.price.toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
+                  </span>
+                </div>
+              ) : (
+                <p className="text-3xl font-bold text-gray-900 mb-6">
+                  Rs.{" "}
+                  {product.price.toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </p>
+              )}
+
+              {/* Description */}
+              <p className="text-gray-600 leading-relaxed mb-8">{product.description}</p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex gap-4">
+              <button
+                onClick={handleAddToCart}
+                className="w-1/2 py-3 bg-yellow-500 text-white font-bold rounded-lg shadow hover:bg-yellow-600 transition-all cursor-pointer"
+              >
+                Add to Cart
+              </button>
+              <button
+                onClick={handleBuyNow}
+                className="w-1/2 py-3 bg-green-600 text-white font-bold rounded-lg shadow hover:bg-green-700 transition-all cursor-pointer"
+              >
+                Buy Now
+              </button>
+            </div>
+          </div>
         </div>
       )}
-      {status === "error" && <div>Error</div>}
+
+      {status === "error" && (
+        <div className="text-red-500 font-bold text-lg">Error loading product</div>
+      )}
     </div>
   );
 }
