@@ -13,7 +13,7 @@ export default function Overview() {
   useEffect(() => {
     if (status === "loading") {
       axios
-        .get(`${import.meta.env.VITE_BACKEND_URL}/products/${params.productId}`)
+        .get(`${import.meta.env.VITE_BACKEND_URL}/api/products/${params.productId}`)
         .then((res) => {
           setProduct(res.data);
           setStatus("success");

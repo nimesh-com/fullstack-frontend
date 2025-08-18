@@ -14,7 +14,7 @@ export default function ProductAdminPage() {
   useEffect(() => {
     if (isLoading) {
       axios
-        .get(import.meta.env.VITE_BACKEND_URL + "/products", {
+        .get(import.meta.env.VITE_BACKEND_URL + "/api/products", {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         })
         .then((response) => {
