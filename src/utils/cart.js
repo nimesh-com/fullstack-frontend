@@ -10,31 +10,35 @@ export function getCart() {
 }
 
 export function addToCart(product, qty) {
-  let cart = getCart(); // Get the current cart from localStorage
+  // Function to add or update a product in the cart
+  const cart = getCart();
   const existingProductIndex = cart.findIndex((item) => {
-    // Check if the product already exists in the cart
-    return item.productId === product.productId; // Find the index of the product in the cart
+    return item.productId === product.productId;
   });
+
   if (existingProductIndex == -1) {
-    // If the product doesn't exist in the cart
+    // If product is not in the cart, add it
     cart.push({
       productId: product.productId,
       name: product.name,
       price: product.price,
       image: product.image,
-      qty: qty,
+      quantity: qty,
     });
-    localStorage.setItem("cart", JSON.stringify(cart)); // Save the updated cart back to localStorage
+    localStorage.setItem("cart", JSON.stringify(cart));
   } else {
-    const newQty = cart[existingProductIndex].qty + qty; // If the product exists, update the quantity
+    // If product is already in the cart, update its quantity
+    const newQty = cart[existingProductIndex].quantity + qty;
     if (newQty <= 0) {
+      // If quantity is zero or less, remove the product from the cart
       const newCart = cart.filter((item, index) => {
-        // Filter out the product if the new quantity is less than or equal to zero
-        return index !== existingProductIndex; // Remove the product from the cart
+        return index !== existingProductIndex;
       });
+      localStorage.setItem("cart", JSON.stringify(newCart));
     } else {
-      cart[existingProductIndex].qty = newQty; // Update the quantity of the existing product
-      localStorage.setItem("cart", JSON.stringify(cart)); // Save the updated cart back to localStorage
+      // Update the quantity of the existing product
+      cart[existingProductIndex].quantity = newQty;
+      localStorage.setItem("cart", JSON.stringify(cart));
     }
   }
 }
