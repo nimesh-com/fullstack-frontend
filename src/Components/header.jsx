@@ -1,6 +1,7 @@
 import { BiCart } from "react-icons/bi";
 import { Link } from "react-router-dom";
 
+
 export default function Header() {
     return (
         <div className="h-[100px] bg-blue-500 flex justify-center items-center relative">
