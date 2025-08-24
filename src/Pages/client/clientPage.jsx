@@ -5,6 +5,8 @@ import Overview from "./overview";
 import { CartPage } from "./cart";
 import { Checkout } from "./checkout";
 
+
+
 export default function ClientPage() {
   return (
     <div className="w-full h-screen max-h-screen">
@@ -17,8 +19,8 @@ export default function ClientPage() {
           <Route path="/about" element={<h1>About us</h1>} />
           <Route path="/contact" element={<h1>Contact us</h1>} />
           <Route path="/overview/:productId" element={<Overview />} />
-          <Route path ="/cart" element={<CartPage/>}/>
-          <Route path ="/checkout" element={<Checkout/>}/>
+          <Route path="/cart" element={<CartPage />} />
+          <Route path="/checkout" element={<Checkout />} />
           <Route path="/*" element={<h1>404</h1>} />
         </Routes>
       </div>

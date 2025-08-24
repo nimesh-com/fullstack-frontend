@@ -5,10 +5,11 @@ import Loader from "../../Components/loader";
 import toast from "react-hot-toast";
 import ImageSlider from "../../Components/imageSlider";
 import { addToCart, getCart } from "../../utils/cart";
-
+import { useNavigate } from "react-router-dom";
 
 export default function Overview() {
   const params = useParams();
+  const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [status, setStatus] = useState("loading");
 
@@ -83,16 +84,22 @@ export default function Overview() {
             {/* Action Buttons */}
             <div className="flex gap-4">
               <button
-             onClick={()=>{
-              addToCart(product, 1);
-              toast.success("Product added to cart!");
-              console.log(getCart());
-             }}
+                onClick={() => {
+                  addToCart(product, 1);
+                  toast.success("Product added to cart!");
+                  console.log(getCart());
+                }}
                 className="w-1/2 py-3 bg-yellow-500 text-white font-bold rounded-lg shadow hover:bg-yellow-600 transition-all cursor-pointer"
               >
                 Add to Cart
               </button>
-              <button className="w-1/2 py-3 bg-green-600 text-white font-bold rounded-lg shadow hover:bg-green-700 transition-all cursor-pointer">
+              <button
+                className="w-1/2 py-3 bg-green-600 text-white font-bold rounded-lg shadow hover:bg-green-700 transition-all cursor-pointer"
+                onClick={() => {
+                  addToCart(product, 1);
+                  navigate("/checkout", { state: { items: getCart() } });
+                }}
+              >
                 Buy Now
               </button>
             </div>

@@ -1,17 +1,56 @@
-import { useState } from "react";
+import { use, useState } from "react";
 import { BiTrash } from "react-icons/bi";
 import { TbTrash } from "react-icons/tb";
 import toast from "react-hot-toast";
 import { useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { getCart } from "../../utils/cart";
+import { useEffect } from "react";
+import axios from "axios";
 
 export function Checkout() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [cart, setCart] = useState(location.state.item || []); // Initialize cart state
-  if (location.state.item == null) {
-    toast.error("No items in cart");
-    navigate("/products");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [address, setAddress] = useState("");
+  const [phone, setPhone] = useState("");
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token == null) {
+      toast.error("You must be logged in to place an order");
+      navigate("/login");
+    } else {
+      axios
+        .get(import.meta.env.VITE_BACKEND_URL + "/api/users/", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          setUser(response.data);
+          setName(response.data.firstname + " " + response.data.lastname);
+          setEmail(response.data.email);
+        })
+        .catch((error) => {
+          toast.error("You must be logged in to place an order");
+          navigate("/login");
+          return;
+        });
+    }
+  }, []);
+  const [cart, setCart] = useState(location.state.items || []); // Initialize cart state
+  useEffect(() => {
+    if (cart.length === 0) {
+      toast.error("Your cart is empty");
+      navigate("/products");
+    }
+  }, [cart, navigate]);
+
+  // If cart is empty, don’t render Checkout content
+  if (cart.length === 0) {
+    return null;
   }
 
   function getTotal() {
@@ -20,6 +59,49 @@ export function Checkout() {
       total += item.price * item.quantity;
     });
     return total;
+  }
+
+  console.log(cart);
+  async function placeOrder() {
+    const token = localStorage.getItem("token");
+    if (token === null) {
+      toast.error("You must be logged in to place an order");
+      navigate("/login");
+      return;
+    }
+    if (address == "" || phone == "" || name == "" || email == "") {
+      toast.error("Please fill all the details");
+      return;
+    }
+    const order = {
+      address: address,
+      phone: phone,
+      items: [],
+    };
+    cart.forEach((item) => {
+      order.items.push({
+        productId: item.productId,
+        qty: item.quantity,
+      });
+    });
+    try {
+      await axios
+        .post(import.meta.env.VITE_BACKEND_URL + "/api/orders", order, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          toast.success("Order placed successfully");
+          localStorage.removeItem("cart");
+          navigate("/products");
+          return;
+        });
+    } catch (error) {
+      toast.error("Failed to place order");
+      console.log(error);
+      return;
+    }
   }
   return (
     <div className="w-full min-h-screen bg-gray-50 py-8 px-4">
@@ -65,6 +147,9 @@ export function Checkout() {
                           if (newCart[index].quantity === 0) {
                             newCart.splice(index, 1);
                           }
+                          if (newCart.length === 0) {
+                            localStorage.removeItem("cart");
+                          }
                           setCart(newCart);
                         }}
                       >
@@ -96,15 +181,93 @@ export function Checkout() {
                     </div>
                   </div>
 
-                  <button className="absolute top-4 right-4 w-8 h-8 flex justify-center items-center bg-red-100 text-red-600 hover:bg-red-600 hover:text-white rounded-full transition-colors duration-200">
+                  <button
+                    className="absolute top-4 right-4 w-8 h-8 flex justify-center items-center bg-red-100 text-red-600 hover:bg-red-600 hover:text-white rounded-full transition-colors duration-200"
+                    onClick={() => {
+                      const newCart = [...cart];
+                      newCart.splice(index, 1);
+                      if (newCart.length === 0) {
+                        localStorage.removeItem("cart");
+                      }
+                      setCart(newCart);
+                    }}
+                  >
                     <TbTrash className="text-lg cursor-pointer" />
                   </button>
                 </div>
               );
             })}
 
+            <div className="bg-white rounded-xl shadow-md p-6 mt-6 hover:shadow-lg transition-all duration-200">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">
+                Deliver Details
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="phone"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Phone
+                  </label>
+                  <input
+                    type="text"
+                    id="phone"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="address"
+                    className="block text-sm font-medium text-gray-700"
+                  >
+                    Address
+                  </label>
+                  <input
+                    type="text"
+                    id="address"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                  />
+                </div>
+              </div>
+            </div>
+
             {/* Cart Summary */}
-            <div className="bg-white rounded-xl shadow-md p-6 mt-6">
+            <div className="bg-white rounded-xl shadow-md p-6 mt-6 hover:shadow-lg transition-all duration-200">
               <h2 className="text-xl font-bold text-gray-900 mb-4">
                 Cart Summary
               </h2>
@@ -132,9 +295,10 @@ export function Checkout() {
                   </span>
                 </div>
               </div>
-              <div></div>
-
-              <button className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg mt-6 transition duration-200 cursor-pointer">
+              <button
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg mt-6 transition duration-200 cursor-pointer"
+                onClick={placeOrder}
+              >
                 Place Your Order
               </button>
             </div>

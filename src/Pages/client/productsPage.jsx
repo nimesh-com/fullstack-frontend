@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
-import Loader from "../../Components/loader";
+import  Loader  from "../../Components/Loader";
 import ProductCard from "../../Components/productCard";
 
 export default function ProductsPage() {
@@ -23,7 +23,7 @@ export default function ProductsPage() {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="w-full h-full flex justify-center items-center flex-wrap shrink-0 gap-[40px] p-[20px]">
+        <div className="w-full h-full flex justify-center items-center flex-wrap shrink-0 gap-[40px] p-[20px] hover:scale-105 transition-all duration-200">
           {products.map((products) => {
             return <ProductCard key={products.productId} product= {products} />;
           })}
