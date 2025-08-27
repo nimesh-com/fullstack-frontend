@@ -23,7 +23,7 @@ export default function ProductsPage() {
       {isLoading ? (
         <Loader />
       ) : (
-        <div className="w-full h-full flex justify-center items-center flex-wrap shrink-0 gap-[40px] p-[20px] hover:scale-105 transition-all duration-200">
+        <div className="w-full h-full flex justify-center items-center flex-wrap shrink-0 gap-[40px] p-[20px]">
           {products.map((products) => {
             return <ProductCard key={products.productId} product= {products} />;
           })}
