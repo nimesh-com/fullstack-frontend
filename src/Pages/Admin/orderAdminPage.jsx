@@ -32,7 +32,11 @@ export function OrderAdminPage() {
         .then((response) => {
           setOrders(response.data.orders);
           setTotalPages(response.data.totalPages);
-          console.log(response.data);
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.error(err);
+          toast.error("Failed to fetch orders");
           setLoading(false);
         });
     }
@@ -59,13 +63,14 @@ export function OrderAdminPage() {
               </tr>
             </thead>
             <tbody>
-              {orders.map((order, index) => {
+              {orders.map((order) => {
                 return (
                   <tr
-                    className="border-b-[1px] hover:bg-blue-700 hover:text-white"
-                    key={index}
+                    className="border-b-[1px] hover:bg-blue-700 hover:text-white cursor-pointer"
+                    key={order.orderID}
                     onClick={() => {
                       setClickedOrder(order);
+                      setOrderStatus(order.status); // sync select with current order status
                       setPopupVisible(true);
                     }}
                   >
@@ -101,6 +106,8 @@ export function OrderAdminPage() {
               })}
             </tbody>
           </table>
+
+          {/* Popup */}
           {popupVisible && clickedOrder && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
               <div className="w-[600px] max-h-[80vh] bg-white rounded-2xl shadow-2xl overflow-y-auto relative p-6">
@@ -109,47 +116,12 @@ export function OrderAdminPage() {
                   <h2 className="text-2xl font-bold text-gray-800">
                     Order Details
                   </h2>
-                  {/* Save Changes Button */}
-
-                  {orderStatus !== clickedOrder.status && (
-                    <div className="flex justify-center  pt-4">
-                      <button
-                        onClick={async () => {
-                          // handle save logic here
-                          setPopupVisible(false);
-                          try {
-                            await axios.put(
-                              import.meta.env.VITE_BACKEND_URL +
-                                "/api/orders/" +
-                                clickedOrder.orderID,
-                              {
-                                status: orderStatus,
-                              },
-                              {
-                                headers: {
-                                  Authorization: `Bearer ${localStorage.getItem(
-                                    "token"
-                                  )}`,
-                                },
-                              }
-                            );
-                            setLoading(true);
-                            toast.success("Order status updated successfully");
-                          } catch (err) {
-                            console.log(err);
-                            toast.error("Failed to update order status");
-                          }
-                        }}
-                        className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 transition"
-                      >
-                        Save Changes
-                      </button>
-                    </div>
-                  )}
-
                   <button
-                    onClick={() => setPopupVisible(false)}
-                    className="w-8 h-8 flex items-center justify-center rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition"
+                    onClick={() => {
+                      setPopupVisible(false);
+                      setClickedOrder(null);
+                    }}
+                    className="w-8 h-8 flex items-center justify-center rounded-full bg-red-500 text-white font-bold hover:bg-red-600 transition cursor-pointer"
                   >
                     ✕
                   </button>
@@ -192,8 +164,11 @@ export function OrderAdminPage() {
                     >
                       {clickedOrder.status}
                     </span>
+                  </p>
+                  <div className="flex items-center gap-3 mt-2">
                     <select
                       className="border border-gray-300 rounded-md px-2 py-1"
+                      value={orderStatus}
                       onChange={(e) => {
                         setOrderStatus(e.target.value);
                       }}
@@ -202,7 +177,42 @@ export function OrderAdminPage() {
                       <option value="completed">Completed</option>
                       <option value="cancelled">Cancelled</option>
                     </select>
-                  </p>
+
+                    {orderStatus !== clickedOrder.status && (
+                      <button
+                        onClick={async () => {
+                          try {
+                            await axios.put(
+                              import.meta.env.VITE_BACKEND_URL +
+                                "/api/orders/" +
+                                clickedOrder.orderID,
+                              {
+                                status: orderStatus,
+                              },
+                              {
+                                headers: {
+                                  Authorization: `Bearer ${localStorage.getItem(
+                                    "token"
+                                  )}`,
+                                },
+                              }
+                            );
+                            setLoading(true);
+                            setPopupVisible(false);
+                            setClickedOrder(null);
+                            toast.success("Order status updated successfully");
+                          } catch (err) {
+                            console.error(err);
+                            toast.error("Failed to update order status");
+                          }
+                        }}
+                        className="px-6 py-2 bg-blue-600 text-white font-medium rounded-lg shadow-md hover:bg-blue-700 transition"
+                      >
+                        Save Changes
+                      </button>
+                    )}
+                  </div>
+
                   <p>
                     <span className="font-semibold">Date:</span>{" "}
                     {new Date(clickedOrder.date).toLocaleString()}
@@ -212,7 +222,11 @@ export function OrderAdminPage() {
                     {clickedOrder.note}
                   </p>
                   <p className="text-lg font-semibold">
-                    <span>Total:</span> ${clickedOrder.total}
+                    <span>Total:</span> $
+                    {clickedOrder.total.toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
                   </p>
                 </div>
 
@@ -244,7 +258,11 @@ export function OrderAdminPage() {
                           </p>
                         </div>
                         <p className="font-semibold text-gray-800">
-                          ${item.price * item.qty}
+                          $
+                          {(item.price * item.qty).toLocaleString("en-US", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
                         </p>
                       </li>
                     ))}
@@ -254,7 +272,7 @@ export function OrderAdminPage() {
             </div>
           )}
 
-          {/*  currentPage, totalPages,  setLimit, setCurrentPage ,limit */}
+          {/* Pagination */}
           <Paginator
             currentPage={page}
             totalPages={totalPages}

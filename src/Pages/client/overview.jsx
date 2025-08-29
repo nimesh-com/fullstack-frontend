@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import Loader from "../../Components/loader";
+import Loader from "../../Components/Loader";
 import toast from "react-hot-toast";
 import ImageSlider from "../../Components/imageSlider";
 import { addToCart, getCart } from "../../utils/cart";
@@ -89,7 +89,7 @@ export default function Overview() {
                   toast.success("Product added to cart!");
                   console.log(getCart());
                 }}
-                className="w-1/2 py-3 bg-yellow-500 text-white font-bold rounded-lg shadow hover:bg-yellow-600 transition-all cursor-pointer"
+                className="w-1/2 py-3 bg-secondary text-white font-bold rounded-lg shadow hover:bg-btn-hover transition-all cursor-pointer"
               >
                 Add to Cart
               </button>

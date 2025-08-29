@@ -136,7 +136,7 @@ export function CartPage() {
               <div></div>
 
               <button
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg mt-6 transition duration-200 cursor-pointer"
+                className="w-full bg-secondary hover:bg-btn-hover text-white font-medium py-3 px-4 rounded-lg mt-6 transition duration-200 cursor-pointer"
                 onClick={() => {
                   navigate("/checkout", { state: { items: cart } });
                 }}
