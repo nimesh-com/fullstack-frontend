@@ -9,12 +9,15 @@ export default function Header() {
   return (
     <header className="h-[80px] bg-secondary flex items-center px-6 relative">
       {/* Logo / Home */}
-      <Link to="/" className="text-2xl font-bold text-white">
-        Home
+      <Link to="/" className="w-[100px] h-[70px] object-cover">
+          <img className="w-full h-full" src="./pngwing.com.png" alt="" />
       </Link>
 
       {/* Desktop Menu */}
       <nav className="hidden md:flex ml-6 space-x-6">
+        <Link to="/" className="text-white text-lg hover:text-gray-200">
+          Home
+        </Link>
         <Link to="/products" className="text-white text-lg hover:text-gray-200">
           Products
         </Link>
@@ -45,6 +48,13 @@ export default function Header() {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="absolute top-[80px] left-0 w-full bg-secondary flex flex-col items-center py-4 space-y-4 md:hidden">
+            <Link
+            to="/"
+            className="text-white text-lg"
+            onClick={() => setIsOpen(false)}
+          >
+            Home
+          </Link>
           <Link
             to="/products"
             className="text-white text-lg"
