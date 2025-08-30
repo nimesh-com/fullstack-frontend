@@ -3,11 +3,14 @@ import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { FaGoogle, FaLock, FaEnvelope } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
   const navigate = useNavigate();
+
   const googleLogin = useGoogleLogin({
     onSuccess: (response) => {
       axios
@@ -31,7 +34,12 @@ export default function Login() {
     },
   });
 
-  function Login() {
+  function handleLogin() {
+
+    if(email === "" || Password === ""){
+      toast.error("Please fill all the fields");
+      return;
+    }
     axios
       .post(import.meta.env.VITE_BACKEND_URL + "/api/users/login", {
         email: email,
@@ -55,42 +63,65 @@ export default function Login() {
   }
 
   return (
-    <div className="w-full h-screen bg-[url(./loginbg.jpg)] bg-cover bg-center flex justify-center items-center ">
-      <div className="w-[500px] h-[500px] backdrop-blur-sm rounded-2xl relative gap-[20px] text-white flex flex-col items-center justify-center">
-        <h1 className="absolute top-[20px] text-2xl text-bold  text-center my-5">
-          Login
-        </h1>
-        <div className="w-[350px] flex flex-col">
-          <span>
-            <label className="text-white text-2xl">Email</label>
-          </span>
-          <input
-            onChange={(e) => setEmail(e.target.value)}
-            type="text"
-            className="w-[350px] h-[50px]  rounded-2xl border border-white text-white"
-          />
+    <div className="w-full h-screen bg-[url(./loginbg.jpg)] bg-cover bg-center flex justify-center items-center">
+      <div className="w-[450px] bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl p-8 flex flex-col items-center">
+        {/* Header */}
+        <h1 className="text-3xl font-bold text-white mb-8">Welcome Back</h1>
+
+        {/* Email Input */}
+        <div className="w-full mb-4">
+          <label className="text-white text-lg mb-2 block">Email</label>
+          <div className="flex items-center gap-2 bg-white/20 rounded-xl px-4">
+            <FaEnvelope className="text-white/80" />
+            <input
+              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              placeholder="Enter your email"
+              className="w-full h-12 bg-transparent text-white focus:outline-none"
+            />
+          </div>
         </div>
-        <div className="w-[350px] flex flex-col">
-          <span>
-            <label className="text-white  text-2xl">Password</label>
-          </span>
-          <input
-            type="Password"
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-[350px] h-[50px]  rounded-2xl border border-white text-white"
-          />
+
+        {/* Password Input */}
+        <div className="w-full mb-2">
+          <label className="text-white text-lg mb-2 block">Password</label>
+          <div className="flex items-center gap-2 bg-white/20 rounded-xl px-4">
+            <FaLock className="text-white/80" />
+            <input
+              type="password"
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              className="w-full h-12 bg-transparent text-white focus:outline-none"
+            />
+          </div>
         </div>
+
+        {/* Forgot Password */}
+        <div className="w-full text-right mb-6">
+         <p><Link to="/forgot-password" className="text-white">Forgot Password</Link></p>
+        </div>
+
+        {/* Login Button */}
         <button
-          onClick={Login}
-          className="w-[350px] h-[50px]   rounded-2xl bg-blue-500 text-white text-2xl"
+          onClick={handleLogin}
+          className="w-full h-12 flex items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 transition text-white text-lg font-semibold shadow-md"
         >
-          Login
+          <FaLock /> Login
         </button>
+
+        {/* Divider */}
+        <div className="flex items-center w-full my-6">
+          <div className="flex-1 h-px bg-white/30"></div>
+          <span className="px-3 text-white/80 text-sm">OR</span>
+          <div className="flex-1 h-px bg-white/30"></div>
+        </div>
+
+        {/* Google Login */}
         <button
           onClick={googleLogin}
-          className="w-[350px] h-[50px]   rounded-2xl bg-blue-500 text-white text-2xl"
+          className="w-full h-12 flex items-center justify-center gap-2 rounded-xl bg-red-500 hover:bg-red-600 transition text-white text-lg font-semibold shadow-md"
         >
-          Google Login
+          <FaGoogle /> Continue with Google
         </button>
       </div>
     </div>

@@ -8,6 +8,8 @@ import AdminPage from "./Pages/adminPage";
 import { Toaster } from "react-hot-toast";
 import ClientPage from "./Pages/client/clientPage";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { ForgotPassword } from "./Pages/client/forgotPassword";
+
 
 const clientId="693549845879-aqb13uhia2nh7a8oo2jl12sg5oqanou7.apps.googleusercontent.com";
 function App() {
@@ -18,6 +20,7 @@ function App() {
       <div className="h-screen w-full flex justify-center items-center bg-primary text-accent ">
         <Routes path="/">
           <Route path="/login" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/test" element={<Test />} />
           <Route path="/admin/*" element={<AdminPage />} />
           <Route path="/*" element={<ClientPage />} />
