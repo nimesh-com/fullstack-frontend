@@ -27,7 +27,7 @@ export function ForgotPassword() {
       setStep("otp-reset");
     } catch (error) {
       console.log(error);
-      toast.error("Error sending email: " + error.message);
+      toast.error("Error sending OTP" + (error.response?.data?.message ? `: ${error.response.data.message}` : ""));
     } finally {
       setLoading(false);
     }
