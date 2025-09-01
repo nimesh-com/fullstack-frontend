@@ -22,12 +22,20 @@ export function ForgotPassword() {
 
     setLoading(true);
     try {
-      await axios.post(import.meta.env.VITE_BACKEND_URL + "/api/users/send-otp", { email });
+      await axios.post(
+        import.meta.env.VITE_BACKEND_URL + "/api/users/send-otp",
+        { email }
+      );
       toast.success("OTP sent successfully");
       setStep("otp-reset");
     } catch (error) {
       console.log(error);
-      toast.error("Error sending OTP" + (error.response?.data?.message ? `: ${error.response.data.message}` : ""));
+      toast.error(
+        "Error sending OTP" +
+          (error.response?.data?.message
+            ? `: ${error.response.data.message}`
+            : "")
+      );
     } finally {
       setLoading(false);
     }
@@ -53,11 +61,14 @@ export function ForgotPassword() {
 
     const validateOtp = async () => {
       try {
-        await axios.post(import.meta.env.VITE_BACKEND_URL + "/api/users/validate-otp", {
-          email,
-          otp: otp.join(""),
-          password: "dummyPassword123!", // dummy to just validate OTP
-        });
+        await axios.post(
+          import.meta.env.VITE_BACKEND_URL + "/api/users/validate-otp",
+          {
+            email,
+            otp: otp.join(""),
+            password: "dummyPassword123!", // dummy to just validate OTP
+          }
+        );
         setOtpStatus("Valid");
       } catch (error) {
         if (error.response?.data?.message === "Invalid OTP") {
@@ -74,17 +85,23 @@ export function ForgotPassword() {
   // Step 3: Submit new password
   async function submitOtpAndPassword(e) {
     e.preventDefault();
-    if (!otp.every((digit) => digit !== "")) return toast.error("Please enter OTP");
-    if (!newPassword || !confirmPassword) return toast.error("Please fill all fields");
-    if (newPassword !== confirmPassword) return toast.error("Passwords do not match");
+    if (!otp.every((digit) => digit !== ""))
+      return toast.error("Please enter OTP");
+    if (!newPassword || !confirmPassword)
+      return toast.error("Please fill all fields");
+    if (newPassword !== confirmPassword)
+      return toast.error("Passwords do not match");
     if (otpStatus !== "Valid") return toast.error("OTP is invalid");
 
     try {
-      const res = await axios.post(import.meta.env.VITE_BACKEND_URL + "/api/users/reset-password", {
-        email,
-        otp: otp.join(""),
-        password: newPassword,
-      });
+      const res = await axios.post(
+        import.meta.env.VITE_BACKEND_URL + "/api/users/reset-password",
+        {
+          email,
+          otp: otp.join(""),
+          password: newPassword,
+        }
+      );
       toast.success(res.data.message);
       navigate("/login");
     } catch (error) {
@@ -98,11 +115,17 @@ export function ForgotPassword() {
       <div className="w-[450px] h-[500px] bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl p-8 flex flex-col items-center">
         {step === "email" && (
           <>
-            <h2 className="text-3xl font-bold text-white mb-3 text-center">Forgot Password?</h2>
+            <h2 className="text-3xl font-bold text-white mb-3 text-center">
+              Forgot Password?
+            </h2>
             <p className="text-white/80 mb-6 text-center text-sm px-4">
-              Enter your email address and we’ll send you a link to reset your password.
+              Enter your email address and we’ll send you a link to reset your
+              password.
             </p>
-            <form onSubmit={sendOTP} className="w-full space-y-5 flex flex-col items-center">
+            <form
+              onSubmit={sendOTP}
+              className="w-full space-y-5 flex flex-col items-center"
+            >
               <div className="relative flex items-center bg-white/20 rounded-xl px-4 w-[350px]">
                 <FiMail className="text-white/80 text-lg" />
                 <input
@@ -118,7 +141,11 @@ export function ForgotPassword() {
                 disabled={loading}
                 className="w-[350px] h-12 flex items-center justify-center rounded-xl bg-blue-600 hover:bg-blue-700 transition text-white text-lg font-semibold shadow-md"
               >
-                {loading ? <FiLoader className="animate-spin text-xl" /> : "Send OTP"}
+                {loading ? (
+                  <FiLoader className="animate-spin text-xl" />
+                ) : (
+                  "Send OTP"
+                )}
               </button>
               <button
                 onClick={() => navigate("/login")}
@@ -133,11 +160,17 @@ export function ForgotPassword() {
 
         {step === "otp-reset" && (
           <>
-            <h2 className="text-3xl font-bold text-white mb-3 text-center">Enter OTP & New Password</h2>
+            <h2 className="text-3xl font-bold text-white mb-3 text-center">
+              Enter OTP & New Password
+            </h2>
             <p className="text-white/80 mb-6 text-center text-sm px-4">
-              Enter the 6-digit OTP sent to your email and create a new password.
+              Enter the 6-digit OTP sent to your email and create a new
+              password.
             </p>
-            <form onSubmit={submitOtpAndPassword} className="w-full flex flex-col items-center space-y-5">
+            <form
+              onSubmit={submitOtpAndPassword}
+              className="w-full flex flex-col items-center space-y-5"
+            >
               <div className="flex justify-between w-[350px] mb-1">
                 {otp.map((data, index) => (
                   <input
@@ -152,7 +185,11 @@ export function ForgotPassword() {
                 ))}
               </div>
               {otpStatus && (
-                <span className={`text-sm font-semibold ${otpStatus === "Valid" ? "text-green-400" : "text-red-400"}`}>
+                <span
+                  className={`text-sm font-semibold ${
+                    otpStatus === "Valid" ? "text-green-400" : "text-red-400"
+                  }`}
+                >
                   {otpStatus}
                 </span>
               )}
