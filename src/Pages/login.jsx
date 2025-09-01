@@ -35,8 +35,7 @@ export default function Login() {
   });
 
   function handleLogin() {
-
-    if(email === "" || Password === ""){
+    if (email === "" || Password === "") {
       toast.error("Please fill all the fields");
       return;
     }
@@ -98,7 +97,11 @@ export default function Login() {
 
         {/* Forgot Password */}
         <div className="w-full text-right mb-6">
-         <p><Link to="/forgot-password" className="text-white">Forgot Password</Link></p>
+          <p>
+            <Link to="/forgot-password" className="text-white">
+              Forgot Password
+            </Link>
+          </p>
         </div>
 
         {/* Login Button */}
@@ -123,6 +126,19 @@ export default function Login() {
         >
           <FaGoogle /> Continue with Google
         </button>
+
+        {/* Don't have an account */}
+        <div className="mt-6 text-center">
+          <span className="text-white text-sm">
+            Don't have an account?{" "}
+            <a
+              href="/register"
+              className="text-white font-semibold hover:underline"
+            >
+              Register
+            </a>
+          </span>
+        </div>
       </div>
     </div>
   );
