@@ -4,6 +4,8 @@ import ProductsPage from "./productsPage";
 import Overview from "./overview";
 import { CartPage } from "./cart";
 import { Checkout } from "./checkout";
+import Register from "./register";
+
 
 
 
@@ -21,6 +23,7 @@ export default function ClientPage() {
           <Route path="/overview/:productId" element={<Overview />} />
           <Route path="/cart" element={<CartPage />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/register" element={<Register />} />
           <Route path="/*" element={<h1>404</h1>} />
         </Routes>
       </div>
