@@ -111,35 +111,40 @@ export function ForgotPassword() {
   }
 
   return (
-    <div className="w-full h-screen bg-[url(./loginbg.jpg)] bg-cover bg-center flex justify-center items-center">
-      <div className="w-[450px] h-[500px] bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl p-8 flex flex-col items-center">
+    <div
+      className="fixed inset-0 flex justify-center items-center bg-cover bg-center overflow-hidden"
+      style={{
+        backgroundImage:
+          "linear-gradient(120deg, #00809dbb 0%, #222831cc 100%), url('https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1500&q=80')",
+      }}
+    >
+      <div className="w-[450px] min-h-[500px] bg-[#eeeeee99] backdrop-blur-2xl rounded-2xl shadow-2xl p-8 flex flex-col items-center border border-[#00809d33]">
         {step === "email" && (
           <>
-            <h2 className="text-3xl font-bold text-white mb-3 text-center">
+            <h2 className="text-3xl font-bold text-[#00809D] mb-3 text-center">
               Forgot Password?
             </h2>
-            <p className="text-white/80 mb-6 text-center text-sm px-4">
-              Enter your email address and we’ll send you a link to reset your
-              password.
+            <p className="text-[#222831] mb-6 text-center text-sm px-4">
+              Enter your email address and we’ll send you a link to reset your password.
             </p>
             <form
               onSubmit={sendOTP}
               className="w-full space-y-5 flex flex-col items-center"
             >
-              <div className="relative flex items-center bg-white/20 rounded-xl px-4 w-[350px]">
-                <FiMail className="text-white/80 text-lg" />
+              <div className="relative flex items-center bg-[#eeeeeecc] rounded-xl px-4 w-[350px] border border-[#00809d33]">
+                <FiMail className="text-[#00809D] text-lg" />
                 <input
                   type="email"
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full h-12 bg-transparent text-white placeholder-white/70 px-3 focus:outline-none"
+                  className="w-full h-12 bg-transparent text-[#222831] placeholder-[#00809d99] px-3 focus:outline-none"
                 />
               </div>
               <button
                 type="submit"
                 disabled={loading}
-                className="w-[350px] h-12 flex items-center justify-center rounded-xl bg-blue-600 hover:bg-blue-700 transition text-white text-lg font-semibold shadow-md"
+                className="w-[350px] h-12 flex items-center justify-center rounded-xl bg-[#00809D] hover:bg-[#065084] transition text-[#EEEEEE] text-lg font-semibold shadow-md"
               >
                 {loading ? (
                   <FiLoader className="animate-spin text-xl" />
@@ -150,7 +155,7 @@ export function ForgotPassword() {
               <button
                 onClick={() => navigate("/login")}
                 type="button"
-                className="w-[350px] h-12 flex items-center justify-center rounded-xl bg-white/20 hover:bg-white/30 transition text-white text-lg font-semibold shadow-md"
+                className="w-[350px] h-12 flex items-center justify-center rounded-xl bg-[#222831] hover:bg-[#065084] transition text-[#EEEEEE] text-lg font-semibold shadow-md"
               >
                 Back to Login
               </button>
@@ -160,12 +165,11 @@ export function ForgotPassword() {
 
         {step === "otp-reset" && (
           <>
-            <h2 className="text-3xl font-bold text-white mb-3 text-center">
+            <h2 className="text-3xl font-bold text-[#00809D] mb-3 text-center">
               Enter OTP & New Password
             </h2>
-            <p className="text-white/80 mb-6 text-center text-sm px-4">
-              Enter the 6-digit OTP sent to your email and create a new
-              password.
+            <p className="text-[#222831] mb-6 text-center text-sm px-4">
+              Enter the 6-digit OTP sent to your email and create a new password.
             </p>
             <form
               onSubmit={submitOtpAndPassword}
@@ -180,45 +184,45 @@ export function ForgotPassword() {
                     value={data}
                     onChange={(e) => handleOtpChange(e.target, index)}
                     ref={(el) => (otpRefs.current[index] = el)}
-                    className="w-12 h-12 text-center rounded-xl bg-white/20 text-white text-lg focus:outline-none"
+                    className="w-12 h-12 text-center rounded-xl bg-[#eeeeeecc] text-[#222831] text-lg border border-[#00809d33] focus:outline-none"
                   />
                 ))}
               </div>
               {otpStatus && (
                 <span
                   className={`text-sm font-semibold ${
-                    otpStatus === "Valid" ? "text-green-400" : "text-red-400"
+                    otpStatus === "Valid" ? "text-green-600" : "text-red-500"
                   }`}
                 >
                   {otpStatus}
                 </span>
               )}
 
-              <div className="relative flex items-center bg-white/20 rounded-xl px-4 w-[350px]">
-                <FiLock className="text-white/80 text-lg" />
+              <div className="relative flex items-center bg-[#eeeeeecc] rounded-xl px-4 w-[350px] border border-[#00809d33]">
+                <FiLock className="text-[#00809D] text-lg" />
                 <input
                   type="password"
                   placeholder="New Password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full h-12 bg-transparent text-white placeholder-white/70 px-3 focus:outline-none"
+                  className="w-full h-12 bg-transparent text-[#222831] placeholder-[#00809d99] px-3 focus:outline-none"
                 />
               </div>
 
-              <div className="relative flex items-center bg-white/20 rounded-xl px-4 w-[350px]">
-                <FiLock className="text-white/80 text-lg" />
+              <div className="relative flex items-center bg-[#eeeeeecc] rounded-xl px-4 w-[350px] border border-[#00809d33]">
+                <FiLock className="text-[#00809D] text-lg" />
                 <input
                   type="password"
                   placeholder="Confirm Password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full h-12 bg-transparent text-white placeholder-white/70 px-3 focus:outline-none"
+                  className="w-full h-12 bg-transparent text-[#222831] placeholder-[#00809d99] px-3 focus:outline-none"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-[350px] h-12 flex items-center justify-center rounded-xl bg-green-600 hover:bg-green-700 transition text-white text-lg font-semibold shadow-md"
+                className="w-[350px] h-12 flex items-center justify-center rounded-xl bg-[#00809D] hover:bg-[#065084] transition text-[#EEEEEE] text-lg font-semibold shadow-md"
               >
                 Reset Password
               </button>

@@ -65,10 +65,8 @@ export default function Header() {
         <BiCart className="text-3xl text-[#EEEEEE] hover:text-[#222831] transition" />
       </Link>
 
-
       {/* Register & Logout Buttons */}
       <div className="hidden md:flex items-center gap-3">
-       
         {localStorage.getItem("token") ? (
           <button
             onClick={handleLogout}
@@ -77,14 +75,14 @@ export default function Header() {
             <FiLogOut className="text-lg" />
             Logout
           </button>
-        ):(
-           <Link
-          to="/register"
-          className="flex items-center gap-1 px-4 py-2 bg-[#EEEEEE] hover:bg-[#065084] text-[#00809D] hover:text-[#EEEEEE] rounded-lg font-semibold transition"
-        >
-          <FiUserPlus className="text-lg" />
-          Register
-        </Link>
+        ) : (
+          <Link
+            to="/register"
+            className="flex items-center gap-1 px-4 py-2 bg-[#EEEEEE] hover:bg-[#065084] text-[#00809D] hover:text-[#EEEEEE] rounded-lg font-semibold transition"
+          >
+            <FiUserPlus className="text-lg" />
+            Register
+          </Link>
         )}
       </div>
 

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import Loader from "../../Components/Loader";
@@ -7,12 +7,15 @@ import ImageSlider from "../../Components/imageSlider";
 import { addToCart, getCart } from "../../utils/cart";
 import { useNavigate } from "react-router-dom";
 
-
 export default function Overview() {
   const params = useParams();
   const navigate = useNavigate();
   const [product, setProduct] = useState(null);
   const [status, setStatus] = useState("loading");
+  const [review, setReview] = useState("");
+  const email = localStorage.getItem("email");
+  const [reviews, setReviews] = useState([]);
+  const [reviewStatus, setReviewStatus] = useState("loading");
 
   useEffect(() => {
     if (status === "loading") {
@@ -30,19 +33,57 @@ export default function Overview() {
     }
   }, [status]);
 
+  useEffect(() => {
+    if (reviewStatus === "loading") {
+      axios
+        .get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/reviews?productId=${
+            params.productId
+          }`
+        )
+        .then((res) => {
+          setReviews(res.data);
+          setReviewStatus("success");
+        })
+        .catch(() => {
+          console.log("Error fetching reviews");
+        });
+    }
+  }, [setReviewStatus]);
+
+  function handleReviewSubmit() {
+    if (review === "") {
+      toast.error("Review cannot be empty");
+      return;
+    }
+    axios
+      .post(`${import.meta.env.VITE_BACKEND_URL}/api/reviews`, {
+        productId: params.productId,
+        review: review,
+        email: email,
+      })
+      .then(() => {
+        toast.success("Review added successfully");
+        setReview("");
+        setReviewStatus("loading");
+      })
+      .catch(() => {
+        toast.error("Error adding review");
+      });
+  }
+
   return (
     <div className="w-full min-h-screen bg-gray-50 p-6 flex flex-col items-center gap-10">
       {status === "loading" && <Loader />}
-
       {status === "success" && (
         <>
           {/* Product Details Card */}
+
           <div className="w-full max-w-6xl bg-white rounded-2xl shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
             {/* Product Image Slider */}
             <div className="flex justify-center items-center bg-gray-100 p-6">
               <ImageSlider image={product.image} />
             </div>
-
             {/* Product Info */}
             <div className="p-8 flex flex-col justify-between">
               <div>
@@ -117,9 +158,40 @@ export default function Overview() {
                 Customer Reviews
               </h2>
               <div className="text-gray-500 italic">
-                {/* TODO: Add reviews list & form here */}
                 No reviews yet. Be the first to review!
               </div>
+              {localStorage.getItem("token") && (
+                <div className="mt-8 bg-gray-50 rounded-xl p-6 shadow-inner">
+                  <h3 className="text-xl font-semibold text-accent mb-2">
+                    Write a Review
+                  </h3>
+                  <div className="flex flex-col gap-4">
+                    <div>
+                      <label
+                        className="block text-gray-700 font-medium mb-1"
+                        htmlFor="review"
+                      >
+                        Your Review
+                      </label>
+                      <textarea
+                        onChange={(e) => setReview(e.target.value)}
+                        id="review"
+                        className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-accent"
+                        rows={4}
+                        placeholder="Share your experience..."
+                        required
+                      />
+                    </div>
+                    <button
+                      onClick={handleReviewSubmit}
+                      type="submit"
+                      className=" cursor-pointer self-end bg-accent text-white font-bold px-6 py-2 rounded-lg shadow hover:bg-accent-dark transition"
+                    >
+                      Submit Review
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* 🌿 Key Benefits */}
