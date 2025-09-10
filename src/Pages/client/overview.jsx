@@ -1,11 +1,11 @@
-import { use, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Loader from "../../Components/Loader";
 import toast from "react-hot-toast";
 import ImageSlider from "../../Components/imageSlider";
 import { addToCart, getCart } from "../../utils/cart";
-import { useNavigate } from "react-router-dom";
+import { FiTrash2 } from "react-icons/fi";
 
 export default function Overview() {
   const params = useParams();
@@ -13,16 +13,14 @@ export default function Overview() {
   const [product, setProduct] = useState(null);
   const [status, setStatus] = useState("loading");
   const [review, setReview] = useState("");
-  const email = localStorage.getItem("email");
   const [reviews, setReviews] = useState([]);
-  const [reviewStatus, setReviewStatus] = useState("loading");
+  const [reviewStatus, setReviewStatus] = useState("loading"); // ✅ string instead of boolean
 
+  // Fetch product
   useEffect(() => {
     if (status === "loading") {
       axios
-        .get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/products/${params.productId}`
-        )
+        .get(`${import.meta.env.VITE_BACKEND_URL}/api/products/${params.productId}`)
         .then((res) => {
           setProduct(res.data);
           setStatus("success");
@@ -33,24 +31,36 @@ export default function Overview() {
     }
   }, [status]);
 
+  // Fetch reviews
   useEffect(() => {
     if (reviewStatus === "loading") {
       axios
-        .get(
-          `${import.meta.env.VITE_BACKEND_URL}/api/reviews?productId=${
-            params.productId
-          }`
-        )
+        .get(`${import.meta.env.VITE_BACKEND_URL}/api/reviews/${params.productId}`)
         .then((res) => {
           setReviews(res.data);
-          setReviewStatus("success");
+          setReviewStatus("done"); // ✅ stop re-fetch loop
         })
         .catch(() => {
           console.log("Error fetching reviews");
         });
     }
-  }, [setReviewStatus]);
+  }, [reviewStatus]);
 
+
+  // Delete review
+  function handleDeleteReview(reviewId) {
+    axios
+      .delete(import.meta.env.VITE_BACKEND_URL+"/api/reviews/"+ reviewId)
+      .then(() => {
+        toast.success("Review deleted");
+        setReviewStatus("loading"); // Refresh reviews
+      })
+      .catch(() => {
+        toast.error("Error deleting review");
+      });
+  }
+
+  // Submit review
   function handleReviewSubmit() {
     if (review === "") {
       toast.error("Review cannot be empty");
@@ -65,7 +75,7 @@ export default function Overview() {
       .then(() => {
         toast.success("Review added successfully");
         setReview("");
-        setReviewStatus("loading");
+        setReviewStatus("loading"); // ✅ trigger refresh
       })
       .catch(() => {
         toast.error("Error adding review");
@@ -77,21 +87,16 @@ export default function Overview() {
       {status === "loading" && <Loader />}
       {status === "success" && (
         <>
-          {/* Product Details Card */}
-
+          {/* Product Details */}
           <div className="w-full max-w-6xl bg-white rounded-2xl shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-2">
-            {/* Product Image Slider */}
             <div className="flex justify-center items-center bg-gray-100 p-6">
               <ImageSlider image={product.image} />
             </div>
-            {/* Product Info */}
             <div className="p-8 flex flex-col justify-between">
               <div>
                 <h1 className="font-extrabold text-3xl text-accent mb-4">
                   {product.name}
                 </h1>
-
-                {/* Price */}
                 {product.labledPrice > product.price ? (
                   <div className="flex items-center gap-4 mb-6">
                     <span className="text-2xl font-bold text-red-500 line-through">
@@ -118,20 +123,15 @@ export default function Overview() {
                     })}
                   </p>
                 )}
-
-                {/* Description */}
                 <p className="text-gray-600 leading-relaxed mb-8">
                   {product.description}
                 </p>
               </div>
-
-              {/* Action Buttons */}
               <div className="flex gap-4">
                 <button
                   onClick={() => {
                     addToCart(product, 1);
                     toast.success("Product added to cart!");
-                    console.log(getCart());
                   }}
                   className="w-1/2 py-3 bg-secondary text-white font-bold rounded-lg shadow hover:bg-btn-hover transition-all cursor-pointer"
                 >
@@ -150,93 +150,94 @@ export default function Overview() {
             </div>
           </div>
 
-          {/* Additional Sections */}
-          <div className="w-full max-w-6xl flex flex-col gap-10">
-            {/* ⭐ Customer Reviews Section */}
-            <div className="bg-white rounded-2xl shadow-md p-6">
-              <h2 className="text-2xl font-bold text-accent mb-4">
-                Customer Reviews
-              </h2>
-              <div className="text-gray-500 italic">
-                No reviews yet. Be the first to review!
-              </div>
-              {localStorage.getItem("token") && (
-                <div className="mt-8 bg-gray-50 rounded-xl p-6 shadow-inner">
-                  <h3 className="text-xl font-semibold text-accent mb-2">
-                    Write a Review
-                  </h3>
-                  <div className="flex flex-col gap-4">
-                    <div>
-                      <label
-                        className="block text-gray-700 font-medium mb-1"
-                        htmlFor="review"
-                      >
-                        Your Review
-                      </label>
-                      <textarea
-                        onChange={(e) => setReview(e.target.value)}
-                        id="review"
-                        className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-accent"
-                        rows={4}
-                        placeholder="Share your experience..."
-                        required
-                      />
-                    </div>
-                    <button
-                      onClick={handleReviewSubmit}
-                      type="submit"
-                      className=" cursor-pointer self-end bg-accent text-white font-bold px-6 py-2 rounded-lg shadow hover:bg-accent-dark transition"
-                    >
-                      Submit Review
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
+          {/* Reviews */}
+        {/* Reviews */}
+<div className="w-full max-w-6xl flex flex-col gap-10">
+  <div className="bg-white rounded-2xl shadow-md p-6">
+    <h2 className="text-2xl font-bold text-accent mb-6">
+      Customer Reviews
+    </h2>
 
-            {/* 🌿 Key Benefits */}
-            <div className="bg-white rounded-2xl shadow-md p-6">
-              <h2 className="text-2xl font-bold text-accent mb-4">
-                Key Benefits
-              </h2>
-              <ul className="list-disc pl-6 text-gray-600 space-y-2">
-                {/* TODO: Replace with dynamic data */}
-                <li>Boosts immunity and overall health</li>
-                <li>Rich in vitamins and minerals</li>
-                <li>100% natural and safe</li>
-              </ul>
-            </div>
+    {reviews.length === 0 && (
+      <p className="text-gray-500 italic mb-4">
+        No reviews yet. Be the first to review!
+      </p>
+    )}
 
-            {/* 🧪 Ingredients */}
-            <div className="bg-white rounded-2xl shadow-md p-6">
-              <h2 className="text-2xl font-bold text-accent mb-4">
-                Ingredients
-              </h2>
-              <p className="text-gray-600">
-                {/* TODO: Replace with dynamic data */}
-                Contains herbal extracts, organic fruits, and natural oils.
-              </p>
-            </div>
 
-            {/* 🔄 You May Also Like */}
-            <div className="bg-white rounded-2xl shadow-md p-6">
-              <h2 className="text-2xl font-bold text-accent mb-4">
-                You May Also Like
-              </h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                {/* TODO: Add alternative product cards here */}
-                <div className="bg-gray-100 h-40 rounded-lg flex justify-center items-center text-gray-400">
-                  Placeholder Product
-                </div>
-                <div className="bg-gray-100 h-40 rounded-lg flex justify-center items-center text-gray-400">
-                  Placeholder Product
-                </div>
-              </div>
+    <div className="flex flex-col gap-6">
+      {reviews.map((review) => (
+        <div
+          key={review._id}
+          className="flex flex-col md:flex-row items-start md:items-center gap-4 bg-gray-50 p-4 rounded-xl shadow-sm hover:shadow-md transition"
+        >
+          {/* User Avatar */}
+          <div className="flex-shrink-0">
+            <div className="w-12 h-12 bg-accent text-white rounded-full flex items-center justify-center font-bold text-lg">
+              {review.userId.firstname[0]}{review.userId.lastname[0]}
             </div>
           </div>
+
+          {/* Review Content */}
+          <div className="flex-1">
+            <div className="flex flex-col md:flex-row md:justify-between items-start md:items-center">
+              <h3 className="text-lg font-semibold text-accent">
+                {review.userId.firstname} {review.userId.lastname}
+              </h3>
+              <span className="text-gray-400 text-sm mt-1 md:mt-0">
+                {new Date(review.date).toLocaleDateString()}
+              </span>
+            </div>
+            <p className="text-gray-700 mt-2">{review.review}</p>
+          </div>
+
+          {/* Icon & Delete Button */}
+          <div className="flex flex-col items-center ml-4 gap-2">
+            {localStorage.getItem("email") === review.userId.email && (
+          <button
+                onClick={() => handleDeleteReview(review._id)}
+                className="mt-2 text-red-500 hover:text-red-700 transition cursor-pointer"
+                title="Delete Review"
+              >
+                <FiTrash2 className="text-xl" />
+              </button> 
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+
+
+    {/* Write Review */}
+    {localStorage.getItem("token") && (
+      <div className="mt-8 bg-gray-50 rounded-xl p-6 shadow-inner">
+        <h3 className="text-xl font-semibold text-accent mb-4">
+          Write a Review
+        </h3>
+        <div className="flex flex-col gap-4">
+          <textarea
+            value={review}
+            onChange={(e) => setReview(e.target.value)}
+            className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-accent"
+            rows={4}
+            placeholder="Share your experience..."
+            required
+          />
+          <button
+            onClick={handleReviewSubmit}
+            type="submit"
+            className="self-end bg-accent text-white font-bold px-6 py-2 rounded-lg shadow hover:bg-accent-dark transition"
+          >
+            Submit Review
+          </button>
+        </div>
+      </div>
+    )}
+  </div>
+</div>
+
         </>
       )}
-
       {status === "error" && (
         <div className="text-red-500 font-bold text-lg">
           Error loading product
