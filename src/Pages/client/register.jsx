@@ -13,26 +13,29 @@ export default function Register() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
-function handleSubmit() {
-  if (password !== confirmPassword) {
-    toast.error("Confirm Password does not match Password");
-    return;
-  }
+  function handleSubmit() {
+    if (password !== confirmPassword) {
+      toast.error("Confirm Password does not match Password");
+      return;
+    }
 
-  axios.post(import.meta.env.VITE_BACKEND_URL + "/api/users", {
-    firstname: firstName,
-    lastname: lastName,
-    email: email,
-    password: password,
-  }).then((res) => {
-    console.log(res.data);
-    toast.success("Registration Successful");
-   navigate("/login");
-  }).catch((error) => {
-    console.log(error);
-    toast.error("Registration Failed");
-  });
-}
+    axios
+      .post(import.meta.env.VITE_BACKEND_URL + "/api/users", {
+        firstname: firstName,
+        lastname: lastName,
+        email: email,
+        password: password,
+      })
+      .then((res) => {
+        console.log(res.data);
+        toast.success("Registration Successful");
+        navigate("/login");
+      })
+      .catch((error) => {
+        console.log(error);
+        toast.error("Registration Failed");
+      });
+  }
 
   return (
     <div
@@ -111,7 +114,7 @@ function handleSubmit() {
             />
           </div>
           <button
-          onClick={handleSubmit}
+            onClick={handleSubmit}
             type="submit"
             className="w-full bg-[#00809D] hover:bg-[#065084] text-[#EEEEEE] font-bold py-3 rounded-xl shadow-lg transition text-lg tracking-wide"
           >
