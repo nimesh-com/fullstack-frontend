@@ -34,7 +34,8 @@ export default function Home() {
     <div
       className="w-full flex flex-col min-h-screen"
       style={{
-        background: "linear-gradient(135deg, #EEEEEE, #e0f7fa, #d4f1ff, #ffe8b3)",
+        background:
+          "linear-gradient(135deg, #EEEEEE, #e0f7fa, #d4f1ff, #ffe8b3)",
         "--color-primary": "#EEEEEE",
         "--color-secondary": "#00809D",
         "--color-accent": "#222831",
@@ -46,7 +47,7 @@ export default function Home() {
         className="min-h-screen flex flex-col justify-center items-center text-center px-4"
         style={{
           backgroundImage:
-            "linear-gradient(rgba(238,238,238,0.2), rgba(224,247,250,0.2)), url('/hero-back.jpg')",
+            "linear-gradient(to bottom, rgba(238,238,238,0.009) 90%, rgba(238,238,238,1) 100%), url('/home-background.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -56,11 +57,11 @@ export default function Home() {
           className="text-5xl md:text-6xl font-extrabold mb-6 drop-shadow-lg"
           style={{ color: "white" }}
         >
-          Welcome to ShopEase Cosmetics
+          Welcome to LuxeAura Cosmetics
         </h1>
         <p
           className="text-lg md:text-xl mb-8 max-w-2xl drop-shadow-md"
-          style={{ color: "var(--color-accent)" }}
+          style={{ color: "white" }}
         >
           Discover the latest beauty products, exclusive deals, and expert tips
           to look and feel your best. Shop your favorite brands and explore new
@@ -130,7 +131,9 @@ export default function Home() {
             <h3 className="text-xl font-bold mb-2 text-[var(--color-accent)]">
               Fast Delivery
             </h3>
-            <p>Get your products delivered quickly and safely to your doorstep.</p>
+            <p>
+              Get your products delivered quickly and safely to your doorstep.
+            </p>
           </div>
           <div className="bg-[white] rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 text-center">
             <h3 className="text-xl font-bold mb-2 text-[var(--color-accent)]">

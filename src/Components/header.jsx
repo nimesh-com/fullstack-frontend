@@ -12,6 +12,7 @@ export default function Header() {
   function handleLogout() {
     localStorage.removeItem("token");
     localStorage.removeItem("email");
+    localStorage.removeItem("role");
     toast.success("Logged out successfully");
     navigate("/login");
   }
@@ -28,7 +29,7 @@ export default function Header() {
     />
   </div>
   <span className="text-white text-2xl font-extrabold tracking-wide hidden md:inline">
-    ShopEase
+LuxeAura
   </span>
 </Link>
 
@@ -46,12 +47,6 @@ export default function Header() {
           className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition"
         >
           Products
-        </Link>
-        <Link
-          to="/reviews"
-          className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition"
-        >
-          Reviews
         </Link>
         <Link
           to="/about"
