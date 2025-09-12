@@ -1,17 +1,8 @@
-/* 
- productId
-    name
-    price
-    category
-    description
-    image
-    isAvailable
-
-*/
 import axios from "axios";
-import { useState } from "react";
+import { use, useState } from "react";
 import toast from "react-hot-toast";
 import uploadFile from "../../utils/mediaUpload";
+import { Link, useNavigate } from "react-router-dom";
 export default function AddProduct() {
   const [productId, setProductId] = useState("");
   const [name, setProductName] = useState("");
@@ -21,6 +12,7 @@ export default function AddProduct() {
   const [image, setProductImage] = useState([]);
   const [isAvailable, setIsAvailable] = useState(true);
   const[labeledPrice, setLabeledPrice] = useState("");
+  const navigate = useNavigate();
 
   async function addProduct() {
     const promisArray = [];
@@ -59,6 +51,10 @@ export default function AddProduct() {
         console.log(error);
         toast.error("Failed to add product");
       });
+  }
+
+  function cancel(){
+    navigate("/admin/products");
   }
 
   return (
@@ -181,15 +177,16 @@ export default function AddProduct() {
 
         <div className="flex justify-end space-x-4">
           <button
+          onClick={cancel}
             type="button"
-            className="px-6 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-200"
+            className="px-6 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition duration-200 cursor-pointer"
           >
             Cancel
           </button>
           <button
             type="submit"
             onClick={addProduct}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200"
+            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-200 cursor-pointer"
           >
             Submit Product
           </button>
