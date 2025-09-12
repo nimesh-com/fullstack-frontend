@@ -14,13 +14,18 @@ export default function Overview() {
   const [status, setStatus] = useState("loading");
   const [review, setReview] = useState("");
   const [reviews, setReviews] = useState([]);
-  const [reviewStatus, setReviewStatus] = useState("loading"); // ✅ string instead of boolean
+  const [reviewStatus, setReviewStatus] = useState("loading");
+
+  // ✅ get logged-in user email from localStorage
+  const email = localStorage.getItem("email");
 
   // Fetch product
   useEffect(() => {
     if (status === "loading") {
       axios
-        .get(`${import.meta.env.VITE_BACKEND_URL}/api/products/${params.productId}`)
+        .get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/products/${params.productId}`
+        )
         .then((res) => {
           setProduct(res.data);
           setStatus("success");
@@ -29,13 +34,15 @@ export default function Overview() {
           setStatus("error");
         });
     }
-  }, [status]);
+  }, [status, params.productId]);
 
   // Fetch reviews
   useEffect(() => {
     if (reviewStatus === "loading") {
       axios
-        .get(`${import.meta.env.VITE_BACKEND_URL}/api/reviews/${params.productId}`)
+        .get(
+          `${import.meta.env.VITE_BACKEND_URL}/api/reviews/${params.productId}`
+        )
         .then((res) => {
           setReviews(res.data);
           setReviewStatus("done"); // ✅ stop re-fetch loop
@@ -44,13 +51,12 @@ export default function Overview() {
           console.log("Error fetching reviews");
         });
     }
-  }, [reviewStatus]);
-
+  }, [reviewStatus, params.productId]);
 
   // Delete review
   function handleDeleteReview(reviewId) {
     axios
-      .delete(import.meta.env.VITE_BACKEND_URL+"/api/reviews/"+ reviewId)
+      .delete(import.meta.env.VITE_BACKEND_URL + "/api/reviews/" + reviewId)
       .then(() => {
         toast.success("Review deleted");
         setReviewStatus("loading"); // Refresh reviews
@@ -62,7 +68,7 @@ export default function Overview() {
 
   // Submit review
   function handleReviewSubmit() {
-    if (review === "") {
+    if (review.trim() === "") {
       toast.error("Review cannot be empty");
       return;
     }
@@ -151,91 +157,88 @@ export default function Overview() {
           </div>
 
           {/* Reviews */}
-        {/* Reviews */}
-<div className="w-full max-w-6xl flex flex-col gap-10">
-  <div className="bg-white rounded-2xl shadow-md p-6">
-    <h2 className="text-2xl font-bold text-accent mb-6">
-      Customer Reviews
-    </h2>
+          <div className="w-full max-w-6xl flex flex-col gap-10">
+            <div className="bg-white rounded-2xl shadow-md p-6">
+              <h2 className="text-2xl font-bold text-accent mb-6">
+                Customer Reviews
+              </h2>
 
-    {reviews.length === 0 && (
-      <p className="text-gray-500 italic mb-4">
-        No reviews yet. Be the first to review!
-      </p>
-    )}
+              {reviews.length === 0 && (
+                <p className="text-gray-500 italic mb-4">
+                  No reviews yet. Be the first to review!
+                </p>
+              )}
 
+              <div className="flex flex-col gap-6">
+                {reviews.map((review) => (
+                  <div
+                    key={review._id}
+                    className="flex flex-col md:flex-row items-start md:items-center gap-4 bg-gray-50 p-4 rounded-xl shadow-sm hover:shadow-md transition"
+                  >
+                    {/* User Avatar */}
+                    <div className="flex-shrink-0">
+                      <div className="w-12 h-12 bg-accent text-white rounded-full flex items-center justify-center font-bold text-lg">
+                        {review.userId.firstname[0]}
+                        {review.userId.lastname[0]}
+                      </div>
+                    </div>
 
-    <div className="flex flex-col gap-6">
-      {reviews.map((review) => (
-        <div
-          key={review._id}
-          className="flex flex-col md:flex-row items-start md:items-center gap-4 bg-gray-50 p-4 rounded-xl shadow-sm hover:shadow-md transition"
-        >
-          {/* User Avatar */}
-          <div className="flex-shrink-0">
-            <div className="w-12 h-12 bg-accent text-white rounded-full flex items-center justify-center font-bold text-lg">
-              {review.userId.firstname[0]}{review.userId.lastname[0]}
+                    {/* Review Content */}
+                    <div className="flex-1">
+                      <div className="flex flex-col md:flex-row md:justify-between items-start md:items-center">
+                        <h3 className="text-lg font-semibold text-accent">
+                          {review.userId.firstname} {review.userId.lastname}
+                        </h3>
+                        <span className="text-gray-400 text-sm mt-1 md:mt-0">
+                          {new Date(review.date).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <p className="text-gray-700 mt-2">{review.review}</p>
+                    </div>
+
+                    {/* Delete Button */}
+                    <div className="flex flex-col items-center ml-4 gap-2">
+                      {email === review.userId.email && (
+                        <button
+                          onClick={() => handleDeleteReview(review._id)}
+                          className="mt-2 text-red-500 hover:text-red-700 transition cursor-pointer"
+                          title="Delete Review"
+                        >
+                          <FiTrash2 className="text-xl" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Write Review */}
+              {localStorage.getItem("token") && (
+                <div className="mt-8 bg-gray-50 rounded-xl p-6 shadow-inner">
+                  <h3 className="text-xl font-semibold text-accent mb-4">
+                    Write a Review
+                  </h3>
+                  <div className="flex flex-col gap-4">
+                    <textarea
+                      value={review}
+                      onChange={(e) => setReview(e.target.value)}
+                      className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-accent"
+                      rows={4}
+                      placeholder="Share your experience..."
+                      required
+                    />
+                    <button
+                      onClick={handleReviewSubmit}
+                      type="submit"
+                      className="self-end bg-accent text-white font-bold px-6 py-2 rounded-lg shadow hover:bg-accent-dark transition"
+                    >
+                      Submit Review
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
-
-          {/* Review Content */}
-          <div className="flex-1">
-            <div className="flex flex-col md:flex-row md:justify-between items-start md:items-center">
-              <h3 className="text-lg font-semibold text-accent">
-                {review.userId.firstname} {review.userId.lastname}
-              </h3>
-              <span className="text-gray-400 text-sm mt-1 md:mt-0">
-                {new Date(review.date).toLocaleDateString()}
-              </span>
-            </div>
-            <p className="text-gray-700 mt-2">{review.review}</p>
-          </div>
-
-          {/* Icon & Delete Button */}
-          <div className="flex flex-col items-center ml-4 gap-2">
-            {localStorage.getItem("email") === review.userId.email && (
-          <button
-                onClick={() => handleDeleteReview(review._id)}
-                className="mt-2 text-red-500 hover:text-red-700 transition cursor-pointer"
-                title="Delete Review"
-              >
-                <FiTrash2 className="text-xl" />
-              </button> 
-            )}
-          </div>
-        </div>
-      ))}
-    </div>
-
-
-    {/* Write Review */}
-    {localStorage.getItem("token") && (
-      <div className="mt-8 bg-gray-50 rounded-xl p-6 shadow-inner">
-        <h3 className="text-xl font-semibold text-accent mb-4">
-          Write a Review
-        </h3>
-        <div className="flex flex-col gap-4">
-          <textarea
-            value={review}
-            onChange={(e) => setReview(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-accent"
-            rows={4}
-            placeholder="Share your experience..."
-            required
-          />
-          <button
-            onClick={handleReviewSubmit}
-            type="submit"
-            className="self-end bg-accent text-white font-bold px-6 py-2 rounded-lg shadow hover:bg-accent-dark transition"
-          >
-            Submit Review
-          </button>
-        </div>
-      </div>
-    )}
-  </div>
-</div>
-
         </>
       )}
       {status === "error" && (

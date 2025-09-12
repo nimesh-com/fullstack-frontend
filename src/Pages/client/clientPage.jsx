@@ -8,6 +8,7 @@ import Register from "./register";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Login from "../../Pages/login";
 import { ForgotPassword } from "./forgotPassword";
+import Home from "../home";
 
 const clientId =
   "693549845879-aqb13uhia2nh7a8oo2jl12sg5oqanou7.apps.googleusercontent.com";
@@ -19,7 +20,7 @@ export default function ClientPage() {
       <GoogleOAuthProvider clientId={clientId}>
         <div className="w-full h-[calc(100%-100px)]">
           <Routes path="/">
-            <Route path="/" element={<h1>Home</h1>} />
+            <Route path="/" element={<Home/>} />
             <Route path="/products" element={<ProductsPage />} />
             <Route path="/reviews" element={<h1>Reviews</h1>} />
             <Route path="/about" element={<h1>About us</h1>} />
