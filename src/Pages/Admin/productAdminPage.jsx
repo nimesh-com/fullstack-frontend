@@ -1,16 +1,15 @@
 import { BiEdit, BiPlus, BiTrash } from "react-icons/bi";
-import { Link, Navigate } from "react-router-dom";
-import { useState } from "react";
-import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import { useNavigate } from "react-router-dom";     
-import Loader from "../../Components/loader";
+import Loader from "../../Components/Loader";
 
 export default function ProductAdminPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
+
   useEffect(() => {
     if (isLoading) {
       axios
@@ -20,88 +19,110 @@ export default function ProductAdminPage() {
         .then((response) => {
           setProducts(response.data);
           setIsLoading(false);
+        })
+        .catch(() => {
+          toast.error("Failed to fetch products");
+          setIsLoading(false);
         });
     }
   }, [isLoading]);
+
   return (
-    <div className="w-full h-full ">
-      {isLoading ? (<Loader/>): (<table>
-        <thead>
-          <tr>
-            <th className="p-[10px]">Image</th>
-            <th className="p-[10px]">Product Id</th>
-            <th className="p-[10px]">Name</th>
-            <th className="p-[10px]">Price</th>
-            <th className="p-[10px]">Labeled Price</th>
-            <th className="p-[10px]">Category</th>
-            <th className="p-[10px]">Description</th>
-            <th className="p-[10px]">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((product) => (
-            <tr key={product.productId}>
-              <td className="p-[10px]">
-                <img
-                  src={product.image[0]}
-                  alt={product.name}
-                  className="w-[100px] h-[100px] object-cover"
-                />
-              </td>
-              <td className="p-[10px]">{product.productId}</td>
-              <td className="p-[10px]">{product.name}</td>
-              <td className="p-[10px]">{product.price}</td>
-              <td className="p-[10px]">{product.labledPrice}</td>
-              <td className="p-[10px]">{product.category}</td>
-              <td className="p-[10px] ">{product.description}</td>
-              <td className="p-[10px]">
-                <BiTrash
-                  className="bg-red-500 text-4xl text-white p-[3px] rounded-full cursor-pointer"
-                  onClick={() => {
-                    const token = localStorage.getItem("token");
-                    if (token === null) {
-                      navigate("/login");
-                      return;
-                    }
-                    axios
-                      .delete(
-                        import.meta.env.VITE_BACKEND_URL +
-                          "/products/" +
-                          product.productId,
-                        {
-                          headers: {
-                            Authorization: "Bearer " + token,
-                          },
+    <div className="min-h-screen bg-gray-50 p-6">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">📦 Manage Products</h1>
+
+      {isLoading ? (
+        <div className="flex justify-center items-center h-[60vh]">
+          <Loader />
+        </div>
+      ) : (
+        <div className="overflow-x-auto bg-white rounded-2xl shadow-lg border border-gray-200">
+          <table className="w-full text-sm text-left text-gray-700">
+            <thead className="bg-gradient-to-r from-gray-100 to-gray-200 text-gray-900 text-sm uppercase font-semibold">
+              <tr>
+                <th className="px-6 py-4">Image</th>
+                <th className="px-6 py-4">Product ID</th>
+                <th className="px-6 py-4">Name</th>
+                <th className="px-6 py-4">Price</th>
+                <th className="px-6 py-4">Labeled Price</th>
+                <th className="px-6 py-4">Category</th>
+                <th className="px-6 py-4 text-center">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {products.map((product, idx) => (
+                <tr
+                  key={product.productId}
+                  className={`hover:bg-gray-50 transition ${
+                    idx % 2 === 0 ? "bg-white" : "bg-gray-50"
+                  }`}
+                >
+                  <td className="px-6 py-3">
+                    <img
+                      src={product.image[0]}
+                      alt={product.name}
+                      className="w-16 h-16 rounded-lg object-cover shadow"
+                    />
+                  </td>
+                  <td className="px-6 py-3 font-medium">{product.productId}</td>
+                  <td className="px-6 py-3 font-semibold">{product.name}</td>
+                  <td className="px-6 py-3 text-green-600 font-bold">
+                    ${product.price}
+                  </td>
+                  <td className="px-6 py-3 line-through text-gray-400">
+                    ${product.labledPrice}
+                  </td>
+                  <td className="px-6 py-3">{product.category}</td>
+              
+                  <td className="px-6 py-3 flex items-center justify-center gap-3">
+                    <button
+                      onClick={() => {
+                        navigate("/admin/updateProduct/", { state: product });
+                      }}
+                      className="p-2 rounded-full bg-green-100 hover:bg-green-500 hover:text-white transition"
+                    >
+                      <BiEdit size={22} />
+                    </button>
+                    <button
+                      onClick={() => {
+                        const token = localStorage.getItem("token");
+                        if (!token) {
+                          navigate("/login");
+                          return;
                         }
-                      )
-                      .then((response) => {
-                        setIsLoading(!isLoading);
-                        toast.success("Product Deleted Successfully");
-                        navigate("/admin/products");
-                      })
-                      .catch((error) => {
-                        toast.error("Product Deletion Failed");
-                      });
-                  }}
-                />
-              </td>
-              <td>
-                <BiEdit
-                  className="bg-green-500 text-4xl text-white p-[3px] rounded-full cursor-pointer"
-                  onClick={() => {
-                    navigate("/admin/updateProduct/", {
-                      state: product,
-                    });
-                  }}
-                />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>)}
+                        axios
+                          .delete(
+                            import.meta.env.VITE_BACKEND_URL +
+                              "/products/" +
+                              product.productId,
+                            {
+                              headers: { Authorization: "Bearer " + token },
+                            }
+                          )
+                          .then(() => {
+                            setIsLoading(!isLoading);
+                            toast.success("✅ Product Deleted Successfully");
+                          })
+                          .catch(() => {
+                            toast.error("❌ Product Deletion Failed");
+                          });
+                      }}
+                      className="p-2 rounded-full bg-red-100 hover:bg-red-500 hover:text-white transition"
+                    >
+                      <BiTrash size={22} />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Floating Add Button */}
       <Link
         to="/admin/addProduct"
-        className=" cursor-pointer fixed right-[60px] bottom-[60px] text-white bg-black p-[20px] rounded-[10px]"
+        className="fixed right-8 bottom-8 bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg hover:scale-110 transition transform p-4 rounded-full"
       >
         <BiPlus className="text-3xl" />
       </Link>
