@@ -3,6 +3,7 @@ import { BiCart } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
 import { FiMenu, FiX, FiUserPlus, FiLogOut } from "react-icons/fi";
 import toast from "react-hot-toast";
+import { RiMenuFold4Fill } from "react-icons/ri";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,22 +20,21 @@ export default function Header() {
 
   return (
     <header className="h-[80px] bg-[#00809D] flex items-center px-6 shadow-lg relative z-20">
- {/* Logo / Home */}
-<Link to="/" className="flex items-center gap-3">
-  <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md">
-    <img
-      className="w-8 h-8 object-contain"
-      src="/logo.png" // make sure logo.png is in the public folder
-      alt="Logo"
-    />
-  </div>
-  <span className="text-white text-2xl font-extrabold tracking-wide hidden md:inline">
-LuxeAura
-  </span>
-</Link>
+      {/* Logo / Home */}
+      
+      <Link to="/" className="flex items-center gap-3">
+        <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md">
+          <img
+            className="w-8 h-8 object-contain"
+            src="/logo.png" // make sure logo.png is in the public folder
+            alt="Logo"
+          />
+        </div>
+        <span className="text-white text-2xl font-extrabold tracking-wide hidden md:inline">
+          LuxeAura
+        </span>
+      </Link>
 
-
-      {/* Desktop Menu */}
       <nav className="hidden md:flex ml-8 space-x-8">
         <Link
           to="/"
@@ -61,8 +61,17 @@ LuxeAura
           Contact Us
         </Link>
       </nav>
+      {isLoggedIn && (
+        <Link
+          to="/dashboard"
+          className="text-[#EEEEEE] text-lg font-medium  hover:text-[#222831] transition flex items-center py-2 gap-2 px-5"
+        >
+          <RiMenuFold4Fill className="text-xl " />
+          Dashboard
+        </Link>
+      )}
 
-      {/* Cart Icon */}
+      
       <Link to="/cart" className="ml-auto mr-6">
         <BiCart className="text-3xl text-[#EEEEEE] hover:text-[#222831] transition" />
       </Link>

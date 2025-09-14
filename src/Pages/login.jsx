@@ -23,6 +23,7 @@ export default function Login() {
           localStorage.setItem("token", res.data.token);
           const decoded = jwtDecode(res.data.token);
           localStorage.setItem("email", decoded.email);
+          localStorage.setItem("user", JSON.stringify(decoded));
           if (res.data.role === "admin") {
             navigate("/admin");
           }

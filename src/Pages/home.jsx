@@ -43,6 +43,7 @@ export default function Home() {
       }}
     >
       {/* Hero Section */}
+      
       <div
         className="min-h-screen flex flex-col justify-center items-center text-center px-4"
         style={{
@@ -163,5 +164,7 @@ export default function Home() {
         </Link>
       </div>
     </div>
+    
   );
+
 }
