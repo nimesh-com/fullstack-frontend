@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ProductCard from "../Components/productCard";
-import Loader from "../Components/Loader";
+import Loader from "../Components/loader";
 
 // Swiper v12+ imports
 import { Swiper, SwiperSlide } from "swiper/react";
