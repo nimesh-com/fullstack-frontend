@@ -1,6 +1,6 @@
  import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Loader from "../../Components/Loader";
+import Loader from "../../Components/loader";
 import Paginator from "../../Components/paginator";
 import toast from "react-hot-toast"; 
 
