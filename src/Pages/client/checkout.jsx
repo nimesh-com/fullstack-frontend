@@ -77,6 +77,7 @@ export function Checkout() {
     const order = {
       address,
       phone,
+      email,
       items: cart.map((item) => ({ productId: item.productId, qty: item.quantity })),
     };
 

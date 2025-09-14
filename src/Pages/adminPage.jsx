@@ -8,6 +8,7 @@ import { OrderAdminPage } from "./Admin/orderAdminPage";
 import toast from "react-hot-toast";
 import NotFoundPageAdmin from "./Admin/404NotFoundAdmin";
 import UnauthorizedPage from "./Admin/Unauthorized";
+import MessageAdmin from "./Admin/messageAdmin";
 
 export default function AdminPage() {
   const navigate = useNavigate();
@@ -72,6 +73,13 @@ export default function AdminPage() {
             <IoReorderThreeSharp className="text-red-500 text-xl" />
             Orders
           </Link>
+            <Link
+            className="flex flex-row h-[60px] w-full border-b items-center text-lg px-[20px] text-gray-700 hover:bg-gray-100 gap-[15px] transition"
+            to="/admin/messages"
+          >
+            <IoReorderThreeSharp className="text-red-500 text-xl" />
+            Message
+          </Link>
         </div>
 
         {/* Main Content */}
@@ -96,6 +104,7 @@ export default function AdminPage() {
             <Route path="/orders" element={<OrderAdminPage />} />
             <Route path="/addProduct" element={<AddProduct />} />
             <Route path="/updateProduct" element={<UpdateProduct />} />
+            <Route path="/messages" element={<MessageAdmin />} />
             {/* Fallback 404 */}
             <Route path="*" element={<NotFoundPageAdmin />} />
           </Routes>

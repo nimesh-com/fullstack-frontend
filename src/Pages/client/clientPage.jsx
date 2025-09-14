@@ -12,6 +12,7 @@ import Home from "../home";
 import NotFoundPage from "./404NotFound";
 import ContactUsPage from "./contactUs";
 import AboutUsPage from "./aboutUs";
+import UserDashboard from "./dashboardUser";
 
 const clientId =
   "693549845879-aqb13uhia2nh7a8oo2jl12sg5oqanou7.apps.googleusercontent.com";
@@ -23,18 +24,18 @@ export default function ClientPage() {
       <GoogleOAuthProvider clientId={clientId}>
         <div className="w-full h-[calc(100%-100px)]">
           <Routes path="/">
-            <Route path="/" element={<Home/>} />
+            <Route path="/" element={<Home />} />
+            <Route path="/dashboard" element={<UserDashboard />} />
             <Route path="/products" element={<ProductsPage />} />
-            <Route path="/reviews" element={<h1>Reviews</h1>} />
-            <Route path="/about" element={<AboutUsPage/>} />
-            <Route path="/contact" element={<ContactUsPage/>} />
+            <Route path="/about" element={<AboutUsPage />} />
+            <Route path="/contact" element={<ContactUsPage />} />
             <Route path="/overview/:productId" element={<Overview />} />
             <Route path="/cart" element={<CartPage />} />
             <Route path="/checkout" element={<Checkout />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
-            <Route path="/forgot-password" element={<ForgotPassword/>} />
-            <Route path="/*" element={<NotFoundPage/>} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/*" element={<NotFoundPage />} />
           </Routes>
         </div>
       </GoogleOAuthProvider>
