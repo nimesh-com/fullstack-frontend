@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { FiTrash2, FiMail, FiCheckCircle } from "react-icons/fi";
 import axios from "axios";
 import toast from "react-hot-toast";
-import Loader from "../../Components/Loader";
+import Loader from "../../Components/loader";
 import Paginator from "../../Components/paginator";
 
 export default function AdminMessages() {

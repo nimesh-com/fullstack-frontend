@@ -3,7 +3,7 @@ import { FiHome, FiUser, FiShoppingBag, FiLogOut } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import toast from "react-hot-toast";
-import Loader from "../../Components/Loader";
+import Loader from "../../Components/loader";
 import Paginator from "../../Components/paginator";
 
 export default function UserDashboard() {
