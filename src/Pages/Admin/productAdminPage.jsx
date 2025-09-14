@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import Loader from "../../Components/Loader";
+import Loader from "../../Components/loader";
 
 export default function ProductAdminPage() {
   const [isLoading, setIsLoading] = useState(true);
