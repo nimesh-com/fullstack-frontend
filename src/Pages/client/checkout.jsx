@@ -12,10 +12,13 @@ export function Checkout() {
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [user, setUser] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState("card");
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiry, setExpiry] = useState("");
+  const [cvv, setCvv] = useState("");
 
   const loginToastShown = useRef(false);
   const emptyCartToastShown = useRef(false);
-
   const [cart, setCart] = useState(location.state?.items || []);
 
   // Fetch user details
@@ -74,10 +77,17 @@ export function Checkout() {
       return;
     }
 
+    if (paymentMethod === "card" && (!cardNumber || !expiry || !cvv)) {
+      toast.error("Please fill all card details");
+      return;
+    }
+
     const order = {
       address,
       phone,
       email,
+      paymentMethod,
+      ...(paymentMethod === "card" && { cardNumber, expiry, cvv }),
       items: cart.map((item) => ({ productId: item.productId, qty: item.quantity })),
     };
 
@@ -102,6 +112,7 @@ export function Checkout() {
         </h1>
 
         <div className="space-y-4">
+          {/* Cart Items */}
           {cart.map((item, index) => (
             <div
               key={item.productId}
@@ -188,6 +199,31 @@ export function Checkout() {
                 <label className="block text-sm font-medium text-gray-700">Address</label>
                 <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} className="mt-1 p-2 w-full border border-gray-300 rounded-md" />
               </div>
+            </div>
+          </div>
+
+          {/* Payment Details */}
+          <div className="bg-white rounded-xl shadow-md p-6 mt-6 hover:shadow-lg transition-all duration-200">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Payment Details</h2>
+            <div className="space-y-4">
+              <div className="flex gap-4">
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" value="card" checked={paymentMethod === "card"} onChange={(e) => setPaymentMethod(e.target.value)} />
+                  Credit/Debit Card
+                </label>
+                <label className="flex items-center gap-2 cursor-pointer">
+                  <input type="radio" value="cod" checked={paymentMethod === "cod"} onChange={(e) => setPaymentMethod(e.target.value)} />
+                  Cash on Delivery (COD)
+                </label>
+              </div>
+
+              {paymentMethod === "card" && (
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <input type="text" placeholder="Card Number" value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} className="mt-1 p-2 w-full border border-gray-300 rounded-md" />
+                  <input type="text" placeholder="Expiry (MM/YY)" value={expiry} onChange={(e) => setExpiry(e.target.value)} className="mt-1 p-2 w-full border border-gray-300 rounded-md" />
+                  <input type="text" placeholder="CVV" value={cvv} onChange={(e) => setCvv(e.target.value)} className="mt-1 p-2 w-full border border-gray-300 rounded-md" />
+                </div>
+              )}
             </div>
           </div>
 

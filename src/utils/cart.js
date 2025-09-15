@@ -1,23 +1,22 @@
 export function getCart() {
-  let cartString = localStorage.getItem("cart"); // Retrieve the cart from localStorage
-  // If cart is null, initialize it as an empty array
-  if (cartString == null) {
+  let cartString = localStorage.getItem("cart");
+  if (!cartString) {
     cartString = "[]";
     localStorage.setItem("cart", cartString);
   }
-  const cart = JSON.parse(cartString); // Parse the cart string into an array
-  return cart;
+  return JSON.parse(cartString);
+}
+
+export function getCartCount() {
+  const cart = getCart();
+  return cart.reduce((total, item) => total + item.quantity, 0);
 }
 
 export function addToCart(product, qty) {
-  // Function to add or update a product in the cart
   const cart = getCart();
-  const existingProductIndex = cart.findIndex((item) => {
-    return item.productId === product.productId;
-  });
+  const existingProductIndex = cart.findIndex(item => item.productId === product.productId);
 
-  if (existingProductIndex == -1) {
-    // If product is not in the cart, add it
+  if (existingProductIndex === -1) {
     cart.push({
       productId: product.productId,
       name: product.name,
@@ -25,30 +24,22 @@ export function addToCart(product, qty) {
       image: product.image,
       quantity: qty,
     });
-    localStorage.setItem("cart", JSON.stringify(cart));
   } else {
-    // If product is already in the cart, update its quantity
     const newQty = cart[existingProductIndex].quantity + qty;
     if (newQty <= 0) {
-      // If quantity is zero or less, remove the product from the cart
-      const newCart = cart.filter((item, index) => {
-        return index !== existingProductIndex;
-      });
-      localStorage.setItem("cart", JSON.stringify(newCart));
+      cart.splice(existingProductIndex, 1);
     } else {
-      // Update the quantity of the existing product
       cart[existingProductIndex].quantity = newQty;
-      localStorage.setItem("cart", JSON.stringify(cart));
     }
   }
+
+  localStorage.setItem("cart", JSON.stringify(cart));
+
+  // Trigger cart update event
+  window.dispatchEvent(new Event("cartUpdated"));
 }
 
 export function getTotal() {
   const cart = getCart();
-  let total = 0;
-  cart.forEach((item) => {
-    total += item.price * item.quantity;
-  });
-  return total;
+  return cart.reduce((total, item) => total + item.price * item.quantity, 0);
 }
-

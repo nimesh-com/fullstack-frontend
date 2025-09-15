@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import Loader from "../../Components/Loader";
+import Loader from "../../Components/loader";
 import toast from "react-hot-toast";
 import ImageSlider from "../../Components/imageSlider";
 import { addToCart, getCart } from "../../utils/cart";
