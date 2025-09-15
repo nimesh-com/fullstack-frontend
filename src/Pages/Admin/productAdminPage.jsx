@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
-import Loader from "../../Components/Loader";
+import Loader from "../../Components/loader";
 
 export default function ProductAdminPage() {
   const [isLoading, setIsLoading] = useState(true);
@@ -91,20 +91,18 @@ export default function ProductAdminPage() {
                           return;
                         }
                         axios
-                          .delete(
-                            import.meta.env.VITE_BACKEND_URL +
-                              "/products/" +
-                              product.productId,
+                          .delete(import.meta.env.VITE_BACKEND_URL+"/api/products/"+product.productId,
                             {
                               headers: { Authorization: "Bearer " + token },
                             }
                           )
                           .then(() => {
                             setIsLoading(!isLoading);
-                            toast.success("✅ Product Deleted Successfully");
+                            toast.success("Product Deleted Successfully");
                           })
-                          .catch(() => {
-                            toast.error("❌ Product Deletion Failed");
+                          .catch((error) => {
+                            console.log(error);
+                            toast.error("Product Deletion Failed");
                           });
                       }}
                       className="p-2 rounded-full bg-red-100 hover:bg-red-500 hover:text-white transition"

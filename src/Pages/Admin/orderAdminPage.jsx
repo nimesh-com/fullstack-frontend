@@ -1,6 +1,6 @@
  import React, { useEffect, useState } from "react";
 import axios from "axios";
-import Loader from "../../Components/Loader";
+import Loader from "../../Components/loader";
 import Paginator from "../../Components/paginator";
 import toast from "react-hot-toast"; 
 
@@ -61,10 +61,11 @@ export function OrderAdminPage() {
                   <th className="p-3 border-b border-gray-200">Order ID</th>
                   <th className="p-3 border-b border-gray-200">Name</th>
                   <th className="p-3 border-b border-gray-200">Phone</th>
-                  <th className="p-3 border-b border-gray-200">Address</th>
+                  <th className="p-3 border-b border-gray-200">Payment Method</th>
                   <th className="p-3 border-b border-gray-200">Date</th>
                   <th className="p-3 border-b border-gray-200">Price</th>
                   <th className="p-3 border-b border-gray-200">Status</th>
+                  
                 </tr>
               </thead>
               <tbody>
@@ -81,7 +82,7 @@ export function OrderAdminPage() {
                     <td className="p-3 text-center font-medium">{order.orderID}</td>
                     <td className="p-3 text-center">{order.name}</td>
                     <td className="p-3 text-center">{order.phone}</td>
-                    <td className="p-3 text-center">{order.address}</td>
+                    <td className="p-3 text-center">{order.paymentMethod}</td>
                     <td className="p-3 text-center">
                       {new Date(order.date).toLocaleDateString()}
                     </td>
