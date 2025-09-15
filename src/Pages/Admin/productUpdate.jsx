@@ -19,7 +19,7 @@ export default function UpdateProduct() {
   const [productId, setProductId] = useState(location.state.productId);
   const [name, setProductName] = useState(location.state.name);
   const [price, setProductPrice] = useState(location.state.price);
-  const[labledPrice, setLabeledPrice] = useState(location.state.labledPrice);
+  const [labeledPrice, setLabeledPrice] = useState(location.state.labledPrice);
   const [category, setProductCategory] = useState(location.state.category);
   const [description, setProductDescription] = useState(
     location.state.description
@@ -40,7 +40,7 @@ export default function UpdateProduct() {
       productId: productId,
       name: name,
       price: price,
-      labledPrice: labledPrice,
+      labledPrice: labeledPrice,
       category: category,
       description: description,
       image: response,
@@ -60,7 +60,7 @@ export default function UpdateProduct() {
 
     axios
       .put(
-        import.meta.env.VITE_BACKEND_URL + "/products/" + productId,
+        import.meta.env.VITE_BACKEND_URL + "/api/products/" + productId,
         productData,
         {
           headers: {
@@ -135,8 +135,8 @@ export default function UpdateProduct() {
           <input
             type="number"
             name="labeledPrice"
-            onChange={(e) => setProductPrice(e.target.value)}
-            value={labledPrice}
+            onChange={(e) => setLabeledPrice(e.target.value)}
+            value={labeledPrice}
             placeholder="Enter Price"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
           />

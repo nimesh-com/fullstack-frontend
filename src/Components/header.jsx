@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BiCart } from "react-icons/bi";
 import { Link, useNavigate } from "react-router-dom";
 import { FiMenu, FiX, FiUserPlus, FiLogOut } from "react-icons/fi";
 import toast from "react-hot-toast";
 import { RiMenuFold4Fill } from "react-icons/ri";
+import { getCartCount } from "../utils/cart"; // adjust path as needed
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(getCartCount());
   const navigate = useNavigate();
   const isLoggedIn = !!localStorage.getItem("token");
 
@@ -18,17 +20,22 @@ export default function Header() {
     navigate("/login");
   }
 
+  // Listen to cart changes
+  useEffect(() => {
+    const handleCartUpdate = () => setCartCount(getCartCount());
+    window.addEventListener("cartUpdated", handleCartUpdate);
+
+    return () => {
+      window.removeEventListener("cartUpdated", handleCartUpdate);
+    };
+  }, []);
+
   return (
     <header className="h-[80px] bg-[#00809D] flex items-center px-6 shadow-lg relative z-20">
       {/* Logo / Home */}
-      
       <Link to="/" className="flex items-center gap-3">
         <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md">
-          <img
-            className="w-8 h-8 object-contain"
-            src="/logo.png" // make sure logo.png is in the public folder
-            alt="Logo"
-          />
+          <img className="w-8 h-8 object-contain" src="/logo.png" alt="Logo" />
         </div>
         <span className="text-white text-2xl font-extrabold tracking-wide hidden md:inline">
           LuxeAura
@@ -36,44 +43,38 @@ export default function Header() {
       </Link>
 
       <nav className="hidden md:flex ml-8 space-x-8">
-        <Link
-          to="/"
-          className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition"
-        >
+        <Link to="/" className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition">
           Home
         </Link>
-        <Link
-          to="/products"
-          className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition"
-        >
+        <Link to="/products" className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition">
           Products
         </Link>
-        <Link
-          to="/about"
-          className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition"
-        >
+        <Link to="/about" className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition">
           About Us
         </Link>
-        <Link
-          to="/contact"
-          className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition"
-        >
+        <Link to="/contact" className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition">
           Contact Us
         </Link>
       </nav>
+
       {isLoggedIn && (
         <Link
           to="/dashboard"
-          className="text-[#EEEEEE] text-lg font-medium  hover:text-[#222831] transition flex items-center py-2 gap-2 px-5"
+          className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition flex items-center py-2 gap-2 px-5"
         >
           <RiMenuFold4Fill className="text-xl " />
           Dashboard
         </Link>
       )}
 
-      
-      <Link to="/cart" className="ml-auto mr-6">
+      {/* Cart Icon with Count */}
+      <Link to="/cart" className="ml-auto mr-6 relative">
         <BiCart className="text-3xl text-[#EEEEEE] hover:text-[#222831] transition" />
+        {cartCount > 0 && (
+          <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center">
+            {cartCount}
+          </span>
+        )}
       </Link>
 
       {/* Auth Buttons (Desktop) */}
@@ -106,80 +107,28 @@ export default function Header() {
       </div>
 
       {/* Hamburger (Mobile only) */}
-      <button
-        className="md:hidden text-[#EEEEEE] text-3xl"
-        onClick={() => setIsOpen(!isOpen)}
-      >
+      <button className="md:hidden text-[#EEEEEE] text-3xl" onClick={() => setIsOpen(!isOpen)}>
         {isOpen ? <FiX /> : <FiMenu />}
       </button>
 
       {/* Mobile Menu */}
       {isOpen && (
         <div className="absolute top-[80px] left-0 w-full bg-[#00809D] flex flex-col items-center py-6 space-y-4 md:hidden shadow-xl z-30">
-          <Link
-            to="/"
-            className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition"
-            onClick={() => setIsOpen(false)}
-          >
-            Home
-          </Link>
-          <Link
-            to="/products"
-            className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition"
-            onClick={() => setIsOpen(false)}
-          >
-            Products
-          </Link>
-          <Link
-            to="/reviews"
-            className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition"
-            onClick={() => setIsOpen(false)}
-          >
-            Reviews
-          </Link>
-          <Link
-            to="/about"
-            className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition"
-            onClick={() => setIsOpen(false)}
-          >
-            About Us
-          </Link>
-          <Link
-            to="/contact"
-            className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition"
-            onClick={() => setIsOpen(false)}
-          >
-            Contact Us
-          </Link>
-
+          <Link to="/" className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition" onClick={() => setIsOpen(false)}>Home</Link>
+          <Link to="/products" className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition" onClick={() => setIsOpen(false)}>Products</Link>
+          <Link to="/about" className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition" onClick={() => setIsOpen(false)}>About Us</Link>
+          <Link to="/contact" className="text-[#EEEEEE] text-lg font-medium hover:text-[#222831] transition" onClick={() => setIsOpen(false)}>Contact Us</Link>
           {isLoggedIn ? (
             <button
               className="flex items-center gap-1 px-4 py-2 bg-[#222831] hover:bg-red-600 text-[#EEEEEE] rounded-lg font-semibold transition"
-              onClick={() => {
-                setIsOpen(false);
-                handleLogout();
-              }}
+              onClick={() => { setIsOpen(false); handleLogout(); }}
             >
-              <FiLogOut className="text-lg" />
-              Logout
+              <FiLogOut className="text-lg" /> Logout
             </button>
           ) : (
             <>
-              <Link
-                to="/login"
-                className="flex items-center gap-1 px-4 py-2 bg-[#EEEEEE] hover:bg-[#065084] text-[#00809D] hover:text-[#EEEEEE] rounded-lg font-semibold transition"
-                onClick={() => setIsOpen(false)}
-              >
-                Login
-              </Link>
-              <Link
-                to="/register"
-                className="flex items-center gap-1 px-4 py-2 bg-[#EEEEEE] hover:bg-[#065084] text-[#00809D] hover:text-[#EEEEEE] rounded-lg font-semibold transition"
-                onClick={() => setIsOpen(false)}
-              >
-                <FiUserPlus className="text-lg" />
-                Register
-              </Link>
+              <Link to="/login" className="flex items-center gap-1 px-4 py-2 bg-[#EEEEEE] hover:bg-[#065084] text-[#00809D] hover:text-[#EEEEEE] rounded-lg font-semibold transition" onClick={() => setIsOpen(false)}>Login</Link>
+              <Link to="/register" className="flex items-center gap-1 px-4 py-2 bg-[#EEEEEE] hover:bg-[#065084] text-[#00809D] hover:text-[#EEEEEE] rounded-lg font-semibold transition" onClick={() => setIsOpen(false)}>Register</Link>
             </>
           )}
         </div>

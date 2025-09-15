@@ -91,20 +91,18 @@ export default function ProductAdminPage() {
                           return;
                         }
                         axios
-                          .delete(
-                            import.meta.env.VITE_BACKEND_URL +
-                              "/products/" +
-                              product.productId,
+                          .delete(import.meta.env.VITE_BACKEND_URL+"/api/products/"+product.productId,
                             {
                               headers: { Authorization: "Bearer " + token },
                             }
                           )
                           .then(() => {
                             setIsLoading(!isLoading);
-                            toast.success("✅ Product Deleted Successfully");
+                            toast.success("Product Deleted Successfully");
                           })
-                          .catch(() => {
-                            toast.error("❌ Product Deletion Failed");
+                          .catch((error) => {
+                            console.log(error);
+                            toast.error("Product Deletion Failed");
                           });
                       }}
                       className="p-2 rounded-full bg-red-100 hover:bg-red-500 hover:text-white transition"

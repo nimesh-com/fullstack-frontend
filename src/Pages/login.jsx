@@ -52,6 +52,8 @@ export default function Login() {
         console.log(response.data);
         toast.success("Login Success");
         localStorage.setItem("token", response.data.token);
+          const decoded = jwtDecode(response.data.token);
+          localStorage.setItem("user", JSON.stringify(decoded));
         localStorage.setItem("email", email);
         localStorage.setItem("role", response.data.role);
         if (response.data.role === "admin") {

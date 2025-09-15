@@ -27,6 +27,7 @@ export default function AddProduct() {
       productId: productId,
       name: name,
       price: price,
+      labledPrice: labeledPrice,
       category: category,
       description: description,
       image: response,
@@ -40,7 +41,7 @@ export default function AddProduct() {
     }
 
     axios
-      .post(import.meta.env.VITE_BACKEND_URL + "/products", productData, {
+      .post(import.meta.env.VITE_BACKEND_URL + "/api/products", productData, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
