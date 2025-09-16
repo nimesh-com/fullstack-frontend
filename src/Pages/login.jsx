@@ -6,8 +6,27 @@ import { useNavigate } from "react-router-dom";
 import { FaGoogle, FaLock, FaEnvelope } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { useRef } from "react";
 
 export default function Login() {
+  const location = useLocation();
+  const toastShown = useRef(false); // track if toast already ran
+
+  useEffect(() => {
+    if (toastShown.current) return; // do nothing if already shown
+
+    const params = new URLSearchParams(location.search);
+    const verified = params.get("verified");
+
+    if (verified === "true") {
+      toast.success("Your account is verified! You can now login.");
+      toastShown.current = true; // mark as shown
+      // Remove query from URL so refresh won't show it again
+      window.history.replaceState({}, document.title, "/login");
+    }
+  }, [location]);
   const [email, setEmail] = useState("");
   const [Password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -52,8 +71,8 @@ export default function Login() {
         console.log(response.data);
         toast.success("Login Success");
         localStorage.setItem("token", response.data.token);
-          const decoded = jwtDecode(response.data.token);
-          localStorage.setItem("user", JSON.stringify(decoded));
+        const decoded = jwtDecode(response.data.token);
+        localStorage.setItem("user", JSON.stringify(decoded));
         localStorage.setItem("email", email);
         localStorage.setItem("role", response.data.role);
         if (response.data.role === "admin") {
@@ -65,7 +84,7 @@ export default function Login() {
       })
       .catch((error) => {
         console.log(error);
-        toast.error("Login Failed");
+        toast.error("Login Failed !"+ " "+ error.response.data.message);
       });
   }
 
