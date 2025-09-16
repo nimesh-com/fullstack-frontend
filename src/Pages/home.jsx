@@ -43,9 +43,8 @@ export default function Home() {
       }}
     >
       {/* Hero Section */}
-      
       <div
-        className="min-h-screen flex flex-col justify-center items-center text-center px-4"
+        className="min-h-screen flex flex-col justify-center items-center text-center px-6 sm:px-8"
         style={{
           backgroundImage:
             "linear-gradient(to bottom, rgba(238,238,238,0.009) 90%, rgba(238,238,238,1) 100%), url('/home-background.jpg')",
@@ -55,13 +54,13 @@ export default function Home() {
         }}
       >
         <h1
-          className="text-5xl md:text-6xl font-extrabold mb-6 drop-shadow-lg"
+          className="text-3xl sm:text-4xl md:text-6xl font-extrabold mb-6 drop-shadow-lg"
           style={{ color: "white" }}
         >
           Welcome to LuxeAura Cosmetics
         </h1>
         <p
-          className="text-lg md:text-xl mb-8 max-w-2xl drop-shadow-md"
+          className="text-base sm:text-lg md:text-xl mb-8 max-w-xl md:max-w-2xl drop-shadow-md"
           style={{ color: "white" }}
         >
           Discover the latest beauty products, exclusive deals, and expert tips
@@ -70,7 +69,7 @@ export default function Home() {
         </p>
         <Link
           to="/products"
-          className="flex items-center gap-2 px-6 py-3 bg-[var(--color-secondary)] hover:bg-[var(--color-btn-hover)] text-[var(--color-primary)] font-bold rounded-xl text-lg shadow transition"
+          className="flex items-center gap-2 px-6 py-3 bg-[var(--color-secondary)] hover:bg-[var(--color-btn-hover)] text-[var(--color-primary)] font-bold rounded-xl text-base sm:text-lg shadow transition"
         >
           Explore Products
         </Link>
@@ -78,11 +77,11 @@ export default function Home() {
 
       {/* Featured Products Slider */}
       <div
-        className="max-w-7xl mx-auto mt-16 px-4 py-8 rounded-3xl"
+        className="max-w-7xl w-full mx-auto mt-12 sm:mt-16 px-4 py-8 rounded-3xl"
         style={{ background: sectionBg }}
       >
         <h2
-          className="text-3xl font-bold mb-6"
+          className="text-2xl sm:text-3xl font-bold mb-6"
           style={{ color: "var(--color-secondary)" }}
         >
           Featured Products
@@ -98,11 +97,16 @@ export default function Home() {
             pagination={{ clickable: true }}
             autoplay={{ delay: 2500, disableOnInteraction: false }}
             loop
-            slidesPerView="auto"
-            spaceBetween={25}
+            slidesPerView={1}
+            breakpoints={{
+              640: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 },
+            }}
+            spaceBetween={20}
+            className="w-full"
           >
             {products.map((product) => (
-              <SwiperSlide key={product.productId} style={{ width: "320px" }}>
+              <SwiperSlide key={product.productId} style={{ width: "300px" }}>
                 <ProductCard product={product} />
               </SwiperSlide>
             ))}
@@ -112,59 +116,61 @@ export default function Home() {
 
       {/* Categories / Features Section */}
       <div
-        className="max-w-7xl mx-auto mt-16 px-4 py-12 rounded-3xl"
+        className="max-w-7xl w-full mx-auto mt-12 sm:mt-16 px-4 py-12 rounded-3xl"
         style={{ background: sectionBg }}
       >
         <h2
-          className="text-3xl font-bold mb-8 text-center"
+          className="text-2xl sm:text-3xl font-bold mb-8 text-center"
           style={{ color: "var(--color-secondary)" }}
         >
           Why Choose Us
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-[white] rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 text-center">
-            <h3 className="text-xl font-bold mb-2 text-[var(--color-accent)]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
+          <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 text-center">
+            <h3 className="text-lg sm:text-xl font-bold mb-2 text-[var(--color-accent)]">
               Premium Quality
             </h3>
-            <p>Only high-quality cosmetic products from trusted brands.</p>
+            <p className="text-sm sm:text-base">
+              Only high-quality cosmetic products from trusted brands.
+            </p>
           </div>
-          <div className="bg-[white] rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 text-center">
-            <h3 className="text-xl font-bold mb-2 text-[var(--color-accent)]">
+          <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 text-center">
+            <h3 className="text-lg sm:text-xl font-bold mb-2 text-[var(--color-accent)]">
               Fast Delivery
             </h3>
-            <p>
+            <p className="text-sm sm:text-base">
               Get your products delivered quickly and safely to your doorstep.
             </p>
           </div>
-          <div className="bg-[white] rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 text-center">
-            <h3 className="text-xl font-bold mb-2 text-[var(--color-accent)]">
+          <div className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 text-center">
+            <h3 className="text-lg sm:text-xl font-bold mb-2 text-[var(--color-accent)]">
               Exclusive Deals
             </h3>
-            <p>Enjoy special offers and discounts on your favorite products.</p>
+            <p className="text-sm sm:text-base">
+              Enjoy special offers and discounts on your favorite products.
+            </p>
           </div>
         </div>
       </div>
 
       {/* Call to Action */}
       <div
-        className="max-w-7xl mx-auto mt-16 px-4 py-12 text-center rounded-3xl"
+        className="max-w-7xl w-full mx-auto mt-12 sm:mt-16 px-4 py-12 text-center rounded-3xl"
         style={{ background: sectionBg }}
       >
         <h2
-          className="text-3xl font-bold mb-6"
+          className="text-2xl sm:text-3xl font-bold mb-6"
           style={{ color: "var(--color-secondary)" }}
         >
           Start Your Beauty Journey Today
         </h2>
         <Link
           to="/products"
-          className="inline-block px-8 py-4 bg-[var(--color-secondary)] hover:bg-[var(--color-btn-hover)] text-[var(--color-primary)] font-bold rounded-xl shadow-lg transition"
+          className="inline-block px-6 sm:px-8 py-3 sm:py-4 bg-[var(--color-secondary)] hover:bg-[var(--color-btn-hover)] text-[var(--color-primary)] font-bold rounded-xl shadow-lg transition text-base sm:text-lg"
         >
           Shop Now
         </Link>
       </div>
     </div>
-    
   );
-
 }
