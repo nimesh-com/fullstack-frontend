@@ -67,10 +67,10 @@ export default function ProductAdminPage() {
                   <td className="px-6 py-3 font-medium">{product.productId}</td>
                   <td className="px-6 py-3 font-semibold">{product.name}</td>
                   <td className="px-6 py-3 text-green-600 font-bold">
-                    ${product.price}
+                    Rs.{product.price.toLocaleString("en-US", { minimumFractionDigits: 2 })}
                   </td>
                   <td className="px-6 py-3 line-through text-gray-400">
-                    ${product.labledPrice}
+                    Rs.{product.labledPrice.toLocaleString("en-US", { minimumFractionDigits: 2 })}
                   </td>
                   <td className="px-6 py-3">{product.category}</td>
               
