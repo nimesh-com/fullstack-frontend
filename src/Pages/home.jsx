@@ -1,8 +1,8 @@
-// src/Pages/home.jsx
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ProductCard from "../Components/productCard";
 import Loader from "../Components/loader";
+import Footer from "../Components/footer";
 
 // Swiper v12+ imports
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -171,6 +171,9 @@ export default function Home() {
           Shop Now
         </Link>
       </div>
+
+      {/* Footer */}
+      <Footer/>
     </div>
   );
 }

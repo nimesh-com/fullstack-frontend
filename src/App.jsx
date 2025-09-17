@@ -7,7 +7,6 @@ import Test from "./Pages/test";
 import AdminPage from "./Pages/adminPage";
 import { Toaster } from "react-hot-toast";
 import ClientPage from "./Pages/client/clientPage";
-import { ForgotPassword } from "./Pages/client/forgotPassword";
 
 function App() {
   return (
