@@ -197,7 +197,7 @@ export function OrderAdminPage() {
                   <p><span className="font-semibold">Date:</span> {new Date(clickedOrder.date).toLocaleString()}</p>
                   <p><span className="font-semibold">Note:</span> {clickedOrder.note}</p>
                   <p className="text-lg font-semibold">
-                    <span>Total:</span> ${clickedOrder.total.toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                    <span>Total:</span> Rs.{clickedOrder.total.toLocaleString("en-US", { minimumFractionDigits: 2 })}
                   </p>
                 </div>
 
@@ -218,10 +218,10 @@ export function OrderAdminPage() {
                         <div className="flex-1">
                           <p className="font-medium text-gray-900">{item.name}</p>
                           <p className="text-sm text-gray-600">Qty: {item.qty}</p>
-                          <p className="text-sm text-gray-600">Price: ${item.price}</p>
+                          <p className="text-sm text-gray-600">Price: Rs.{item.price}</p>
                         </div>
                         <p className="font-semibold text-gray-800">
-                          ${(item.price * item.qty).toLocaleString("en-US", { minimumFractionDigits: 2 })}
+                          Rs.{(item.price * item.qty).toLocaleString("en-US", { minimumFractionDigits: 2 })}
                         </p>
                       </li>
                     ))}

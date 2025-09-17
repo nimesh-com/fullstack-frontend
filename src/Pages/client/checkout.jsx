@@ -3,6 +3,8 @@ import { TbTrash } from "react-icons/tb";
 import toast from "react-hot-toast";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Footer from "../../Components/footer"; // 👈 import your Footer
+
 
 export function Checkout() {
   const navigate = useNavigate();
@@ -88,7 +90,10 @@ export function Checkout() {
       email,
       paymentMethod,
       ...(paymentMethod === "card" && { cardNumber, expiry, cvv }),
-      items: cart.map((item) => ({ productId: item.productId, qty: item.quantity })),
+      items: cart.map((item) => ({
+        productId: item.productId,
+        qty: item.quantity,
+      })),
     };
 
     try {
@@ -105,145 +110,240 @@ export function Checkout() {
   }
 
   return (
-    <div className="w-full min-h-screen bg-gray-50 py-8 px-4">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-          Place Your Order
-        </h1>
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      {/* Page content */}
+      <main className="flex-grow py-8 px-4">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+            Place Your Order
+          </h1>
 
-        <div className="space-y-4">
-          {/* Cart Items */}
-          {cart.map((item, index) => (
-            <div
-              key={item.productId}
-              className="bg-white rounded-xl shadow-md p-4 flex flex-col md:flex-row items-center relative transition-all duration-200 hover:shadow-lg"
-            >
-              <img
-                src={item.image[0]}
-                alt={item.name}
-                className="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg"
-              />
+          <div className="space-y-4">
+            {/* Cart Items */}
+            {cart.map((item, index) => (
+              <div
+                key={item.productId}
+                className="bg-white rounded-xl shadow-md p-4 flex flex-col md:flex-row items-center relative transition-all duration-200 hover:shadow-lg"
+              >
+                <img
+                  src={item.image[0]}
+                  alt={item.name}
+                  className="w-20 h-20 md:w-24 md:h-24 object-cover rounded-lg"
+                />
 
-              <div className="flex-1 md:ml-4 mt-4 md:mt-0 text-center md:text-left">
-                <h3 className="text-lg font-semibold text-gray-900">{item.name}</h3>
-                <p className="text-md text-gray-600 mt-1">
-                  Rs. {item.price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                </p>
-              </div>
-
-              <div className="flex items-center mt-4 md:mt-0">
-                <div className="flex items-center border border-gray-300 rounded-lg">
-                  <button
-                    className="w-8 h-8 flex justify-center items-center bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-l-lg"
-                    onClick={() => {
-                      const newCart = [...cart];
-                      newCart[index].quantity--;
-                      if (newCart[index].quantity === 0) newCart.splice(index, 1);
-                      if (newCart.length === 0) localStorage.removeItem("cart");
-                      setCart(newCart);
-                    }}
-                  >
-                    -
-                  </button>
-                  <span className="mx-3 text-lg font-medium min-w-[2rem] text-center">{item.quantity}</span>
-                  <button
-                    className="w-8 h-8 flex justify-center items-center bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-r-lg"
-                    onClick={() => {
-                      const newCart = [...cart];
-                      newCart[index].quantity++;
-                      setCart(newCart);
-                    }}
-                  >
-                    +
-                  </button>
-                </div>
-
-                <div className="ml-6 text-center">
-                  <p className="text-lg font-bold text-gray-900">
-                    Rs. {(item.price * item.quantity).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                <div className="flex-1 md:ml-4 mt-4 md:mt-0 text-center md:text-left">
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    {item.name}
+                  </h3>
+                  <p className="text-md text-gray-600 mt-1">
+                    Rs.{" "}
+                    {item.price.toLocaleString("en-US", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
                   </p>
                 </div>
-              </div>
 
+                <div className="flex items-center mt-4 md:mt-0">
+                  <div className="flex items-center border border-gray-300 rounded-lg">
+                    <button
+                      className="w-8 h-8 flex justify-center items-center bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-l-lg"
+                      onClick={() => {
+                        const newCart = [...cart];
+                        newCart[index].quantity--;
+                        if (newCart[index].quantity === 0) newCart.splice(index, 1);
+                        if (newCart.length === 0) localStorage.removeItem("cart");
+                        setCart(newCart);
+                      }}
+                    >
+                      -
+                    </button>
+                    <span className="mx-3 text-lg font-medium min-w-[2rem] text-center">
+                      {item.quantity}
+                    </span>
+                    <button
+                      className="w-8 h-8 flex justify-center items-center bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-r-lg"
+                      onClick={() => {
+                        const newCart = [...cart];
+                        newCart[index].quantity++;
+                        setCart(newCart);
+                      }}
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  <div className="ml-6 text-center">
+                    <p className="text-lg font-bold text-gray-900">
+                      Rs.{" "}
+                      {(item.price * item.quantity).toLocaleString("en-US", {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  className="absolute top-4 right-4 w-8 h-8 flex justify-center items-center bg-red-100 text-red-600 hover:bg-red-600 hover:text-white rounded-full transition-colors duration-200"
+                  onClick={() => {
+                    const newCart = [...cart];
+                    newCart.splice(index, 1);
+                    if (newCart.length === 0) localStorage.removeItem("cart");
+                    setCart(newCart);
+                  }}
+                >
+                  <TbTrash className="text-lg cursor-pointer" />
+                </button>
+              </div>
+            ))}
+
+            {/* Delivery Details */}
+            <div className="bg-white rounded-xl shadow-md p-6 mt-6 hover:shadow-lg transition-all duration-200">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">
+                Delivery Details
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Name
+                  </label>
+                  <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Phone
+                  </label>
+                  <input
+                    type="text"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700">
+                    Address
+                  </label>
+                  <input
+                    type="text"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Payment Details */}
+            <div className="bg-white rounded-xl shadow-md p-6 mt-6 hover:shadow-lg transition-all duration-200">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">
+                Payment Details
+              </h2>
+              <div className="space-y-4">
+                <div className="flex gap-4">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      value="card"
+                      checked={paymentMethod === "card"}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                    />
+                    Credit/Debit Card
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      value="cod"
+                      checked={paymentMethod === "cod"}
+                      onChange={(e) => setPaymentMethod(e.target.value)}
+                    />
+                    Cash on Delivery (COD)
+                  </label>
+                </div>
+
+                {paymentMethod === "card" && (
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <input
+                      type="text"
+                      placeholder="Card Number"
+                      value={cardNumber}
+                      onChange={(e) => setCardNumber(e.target.value)}
+                      className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                    />
+                    <input
+                      type="text"
+                      placeholder="Expiry (MM/YY)"
+                      value={expiry}
+                      onChange={(e) => setExpiry(e.target.value)}
+                      className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                    />
+                    <input
+                      type="text"
+                      placeholder="CVV"
+                      value={cvv}
+                      onChange={(e) => setCvv(e.target.value)}
+                      className="mt-1 p-2 w-full border border-gray-300 rounded-md"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Cart Summary */}
+            <div className="bg-white rounded-xl shadow-md p-6 mt-6 hover:shadow-lg transition-all duration-200">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">
+                Cart Summary
+              </h2>
+              <div className="flex justify-between mb-2">
+                <span className="text-gray-600">Subtotal</span>
+                <span className="font-medium">
+                  Rs.{" "}
+                  {getTotal().toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </span>
+              </div>
+              <div className="border-t border-gray-200 pt-4 flex justify-between">
+                <span className="text-lg font-bold">Total</span>
+                <span className="text-lg font-bold">
+                  Rs.{" "}
+                  {getTotal().toLocaleString("en-US", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
+                </span>
+              </div>
               <button
-                className="absolute top-4 right-4 w-8 h-8 flex justify-center items-center bg-red-100 text-red-600 hover:bg-red-600 hover:text-white rounded-full transition-colors duration-200"
-                onClick={() => {
-                  const newCart = [...cart];
-                  newCart.splice(index, 1);
-                  if (newCart.length === 0) localStorage.removeItem("cart");
-                  setCart(newCart);
-                }}
+                onClick={placeOrder}
+                className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg mt-6 transition duration-200 cursor-pointer"
               >
-                <TbTrash className="text-lg cursor-pointer" />
+                Place Your Order
               </button>
             </div>
-          ))}
-
-          {/* Delivery Details */}
-          <div className="bg-white rounded-xl shadow-md p-6 mt-6 hover:shadow-lg transition-all duration-200">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Delivery Details</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Name</label>
-                <input type="text" value={name} onChange={(e) => setName(e.target.value)} className="mt-1 p-2 w-full border border-gray-300 rounded-md" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="mt-1 p-2 w-full border border-gray-300 rounded-md" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Phone</label>
-                <input type="text" value={phone} onChange={(e) => setPhone(e.target.value)} className="mt-1 p-2 w-full border border-gray-300 rounded-md" />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Address</label>
-                <input type="text" value={address} onChange={(e) => setAddress(e.target.value)} className="mt-1 p-2 w-full border border-gray-300 rounded-md" />
-              </div>
-            </div>
-          </div>
-
-          {/* Payment Details */}
-          <div className="bg-white rounded-xl shadow-md p-6 mt-6 hover:shadow-lg transition-all duration-200">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Payment Details</h2>
-            <div className="space-y-4">
-              <div className="flex gap-4">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" value="card" checked={paymentMethod === "card"} onChange={(e) => setPaymentMethod(e.target.value)} />
-                  Credit/Debit Card
-                </label>
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="radio" value="cod" checked={paymentMethod === "cod"} onChange={(e) => setPaymentMethod(e.target.value)} />
-                  Cash on Delivery (COD)
-                </label>
-              </div>
-
-              {paymentMethod === "card" && (
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <input type="text" placeholder="Card Number" value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} className="mt-1 p-2 w-full border border-gray-300 rounded-md" />
-                  <input type="text" placeholder="Expiry (MM/YY)" value={expiry} onChange={(e) => setExpiry(e.target.value)} className="mt-1 p-2 w-full border border-gray-300 rounded-md" />
-                  <input type="text" placeholder="CVV" value={cvv} onChange={(e) => setCvv(e.target.value)} className="mt-1 p-2 w-full border border-gray-300 rounded-md" />
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Cart Summary */}
-          <div className="bg-white rounded-xl shadow-md p-6 mt-6 hover:shadow-lg transition-all duration-200">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Cart Summary</h2>
-            <div className="flex justify-between mb-2">
-              <span className="text-gray-600">Subtotal</span>
-              <span className="font-medium">Rs. {getTotal().toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-            </div>
-            <div className="border-t border-gray-200 pt-4 flex justify-between">
-              <span className="text-lg font-bold">Total</span>
-              <span className="text-lg font-bold">Rs. {getTotal().toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-            </div>
-            <button onClick={placeOrder} className="w-full bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded-lg mt-6 transition duration-200 cursor-pointer">
-              Place Your Order
-            </button>
           </div>
         </div>
-      </div>
+      </main>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }
