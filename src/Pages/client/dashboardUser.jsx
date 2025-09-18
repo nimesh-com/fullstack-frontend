@@ -45,6 +45,12 @@ export default function UserDashboard() {
     navigate("/login");
   };
 
+  if(localStorage.getItem('token') === null){
+    toast.error("You must be logged in to view order history");
+navigate("/login");
+return
+  } 
+
   return (
     // wrap page so footer sits at bottom
     <div className="flex flex-col min-h-screen bg-gray-100">
